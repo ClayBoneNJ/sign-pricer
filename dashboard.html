@@ -1,0 +1,997 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pricing Worksheet v3.1</title>
+  <style>
+    :root {
+      --bg: #e8efec;
+      --card: rgba(255, 255, 255, 0.8);
+      --card-strong: rgba(255, 255, 255, 0.94);
+      --ink: #15231d;
+      --muted: #557062;
+      --line: #c9ddd2;
+      --accent: #0d8a5f;
+      --accent-2: #17b77a;
+      --focus: #36b488;
+      --soft: #ecf8f2;
+      --shadow: 0 12px 26px rgba(10, 48, 33, 0.1);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Aptos", "Bahnschrift", "Trebuchet MS", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(23, 183, 122, 0.22), transparent 36%),
+        radial-gradient(circle at 86% 18%, rgba(9, 89, 65, 0.18), transparent 35%),
+        linear-gradient(180deg, #f3f8f5 0%, #e6efea 46%, #dce8e2 100%);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 1360px; margin: 0 auto; padding: 20px; }
+    .hero {
+      background: linear-gradient(138deg, #083b2b 0%, #0a6a49 58%, #11a86f 100%);
+      color: #f1fff8;
+      border-radius: 18px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 16px 34px rgba(8, 60, 42, 0.34);
+      border: 1px solid rgba(207, 245, 228, 0.26);
+    }
+    .hero h1 { margin: 0 0 5px; font-size: 30px; letter-spacing: 0.2px; }
+    .hero p { margin: 0; color: #d6f5e7; font-size: 14px; }
+    .version-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      color: #f3fff8;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(218, 247, 233, 0.35);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+    .layout { display: grid; grid-template-columns: 1.25fr 1fr; gap: 16px; align-items: start; }
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(181, 209, 195, 0.8);
+      border-radius: 14px;
+      padding: 10px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+    }
+    .right { position: sticky; top: 12px; }
+    .section {
+      border: 1px solid #dbe8e1;
+      border-radius: 10px;
+      padding: 9px;
+      margin-bottom: 8px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(246, 253, 249, 0.92) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .section > * {
+      position: relative;
+      z-index: 1;
+    }
+    .section h3 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      color: #1f6a4d;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      font-weight: 800;
+    }
+    .row { display: grid; gap: 8px; margin-bottom: 8px; }
+    .row.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .row.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .row.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .field label { display:block; margin-bottom: 4px; font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 700; letter-spacing: .5px; }
+    input:not([type="checkbox"]):not([type="radio"]), select, textarea {
+      width: 100%;
+      border: 1px solid #bfd4c8;
+      border-radius: 9px;
+      padding: 8px 10px;
+      font: inherit;
+      color: var(--ink);
+      background: var(--card-strong);
+      transition: border-color .18s ease, box-shadow .18s ease, transform .12s ease;
+    }
+    input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--focus);
+      box-shadow: 0 0 0 3px rgba(54, 180, 136, 0.18);
+    }
+    textarea { min-height: 70px; resize: vertical; }
+    .checks { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 6px 10px; }
+    .checks label {
+      display:flex;
+      align-items:center;
+      gap:7px;
+      font-size: 14px;
+      background: #f3faf6;
+      border: 1px solid #d8e9e0;
+      border-radius: 9px;
+      padding: 5px 7px;
+    }
+    .checks input[type="checkbox"] { width: 16px; height: 16px; margin: 0; flex: 0 0 auto; }
+    .checks input[type="radio"] { width: 16px; height: 16px; margin: 0; flex: 0 0 auto; }
+    .checks .choice-row { display: none; align-items: center; gap: 8px; padding: 5px 8px 5px 22px; border-radius: 9px; background: #eff8f3; border: 1px dashed #c7dfd2; }
+    .checks .choice-row.show { display: flex; }
+    .checks .conditional-label { display: none; align-items: center; gap: 7px; padding-left: 22px; font-size: 14px; }
+    .checks .conditional-label.show { display: flex; }
+    .checks .choice-row select { width: auto; min-width: 90px; padding: 5px 8px; }
+    .checks .choice-row input { width: 110px; padding: 5px 8px; }
+    .inline-conditional { display: none; align-items: center; gap: 6px; }
+    .inline-conditional.show { display: inline-flex; }
+    /* Keep each *_choice_row in the same column as its checkbox label. */
+    /* Left-column options use grid-column: 1; right-column options use 2. */
+    #graphics_mode_row { grid-column: 1 / span 2; }
+    #digital_choice_row { grid-column: 1; }
+    #vinyl_choice_row { grid-column: 2; }
+    #laminate_label { grid-column: 1; }
+    #holes_choice_row { grid-column: 1; }
+    #corners_choice_row { grid-column: 2; }
+    #grommets_choice_row { grid-column: 2; }
+    #posts_choice_row, #pvc_cover_label, #dig_label, #dig_choice_row { grid-column: 1; }
+    #wall_mount_choice_row, #bucket_height_row { grid-column: 2; }
+    .item-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+    .frame-trim-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 6px 10px; }
+    .frame-trim-col { display: flex; flex-direction: column; gap: 6px; }
+    .subchecks { padding-left: 22px; display: none; }
+    .subchecks.show { display: flex; flex-direction: column; gap: 6px; }
+    .money-grid { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
+    .pricing-tools {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .pricing-tools label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #1b5e44;
+    }
+    .mini-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0 0 8px;
+    }
+    .breakdown-card {
+      margin-top: 8px;
+      border: 1px solid #d7e7df;
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(244, 251, 247, 0.96) 0%, rgba(235, 246, 240, 0.96) 100%);
+      padding: 10px;
+    }
+    .breakdown-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .breakdown-head strong {
+      font-size: 13px;
+      letter-spacing: .2px;
+      color: #165b41;
+    }
+    .breakdown-head span {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      font-weight: 700;
+    }
+    .breakdown-list {
+      display: grid;
+      gap: 6px;
+    }
+    .breakdown-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed #d5e6de;
+      align-items: start;
+    }
+    .breakdown-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+    .breakdown-row strong {
+      display: block;
+      font-size: 13px;
+    }
+    .breakdown-row small {
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .breakdown-row .amount {
+      font-weight: 800;
+      color: #164f3a;
+      white-space: nowrap;
+    }
+    .mini-actions {
+      display: inline-flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .mini-btn {
+      appearance: none;
+      border: 1px solid #b7d8c8;
+      background: #f3faf6;
+      color: #155a40;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .toolbar { display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 10px; }
+    .btn {
+      appearance:none;
+      border: 0;
+      border-radius: 10px;
+      padding: 9px 13px;
+      font-weight: 800;
+      letter-spacing: .2px;
+      cursor: pointer;
+      transition: transform .14s ease, box-shadow .14s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn.primary {
+      background: linear-gradient(120deg, var(--accent) 0%, var(--accent-2) 100%);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(10, 120, 83, 0.3);
+    }
+    .btn.ghost { background: var(--soft); color: #0d6e4a; border: 1px solid #bfe3d1; }
+    .workorder {
+      border: 1px solid #bfdccc;
+      border-radius: 10px;
+      padding: 12px;
+      background: linear-gradient(160deg, #fdfffe 0%, #edf8f2 100%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+      position: relative;
+      overflow: hidden;
+    }
+    .workorder > * {
+      position: relative;
+      z-index: 1;
+    }
+    .wo-head { display:flex; justify-content: space-between; align-items:flex-start; border-bottom: 1px solid #d8ebe0; padding-bottom: 8px; margin-bottom: 10px; }
+    .wo-title { margin: 0; font-size: 20px; letter-spacing: .2px; }
+    .wo-sub { margin: 2px 0 0; font-size: 12px; color: var(--muted); }
+    .wo-table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+    .wo-table th, .wo-table td { border-bottom: 1px solid #e4eee8; padding: 7px 4px; text-align: left; font-size: 14px; }
+    .wo-table th { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .3px; }
+    .wo-table td.num, .wo-table th.num { text-align: right; }
+    .list { margin: 4px 0 0; padding-left: 18px; }
+    .list li { margin-bottom: 2px; }
+    .theme-bar {
+      margin-top: 12px;
+      display: inline-flex;
+      gap: 8px;
+      padding: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+    .theme-btn {
+      appearance: none;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #e9fff3;
+      font: inherit;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: .4px;
+      padding: 7px 11px;
+      cursor: pointer;
+      transition: all .16s ease;
+    }
+    .theme-btn:hover { transform: translateY(-1px); }
+    .theme-btn.is-active {
+      background: #ffffff;
+      color: #103326;
+      border-color: #ffffff;
+      box-shadow: 0 8px 16px rgba(4, 39, 27, 0.25);
+    }
+    .page-nav {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .page-btn {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #f1fff8;
+      font: inherit;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: .45px;
+      padding: 8px 13px;
+      cursor: pointer;
+      transition: all .16s ease;
+    }
+    .page-btn:hover { transform: translateY(-1px); }
+    .page-btn.is-active {
+      background: #ffffff;
+      color: #103326;
+      border-color: #ffffff;
+      box-shadow: 0 8px 16px rgba(4, 39, 27, 0.25);
+    }
+    .page { display: block; }
+    .page.hidden { display: none; }
+    .section, .workorder { animation: riseIn .35s ease both; }
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    body.theme-light {
+      font-family: "Segoe UI", "Calibri", sans-serif;
+      color: #122639;
+      background: linear-gradient(180deg, #ecf3fb 0%, #dbe7f4 100%);
+    }
+    body.theme-light .hero {
+      background: linear-gradient(115deg, #0f4f93 0%, #2a74bf 60%, #4f95de 100%);
+      border-color: rgba(201, 225, 251, 0.65);
+      box-shadow: 0 14px 28px rgba(22, 71, 121, 0.3);
+      border-radius: 10px;
+    }
+    body.theme-light .hero p { color: #dbeeff; }
+    body.theme-light .theme-bar {
+      background: rgba(17, 76, 137, 0.25);
+      border-color: rgba(186, 214, 246, 0.6);
+    }
+    body.theme-light .page-btn {
+      color: #eff7ff;
+      background: rgba(17, 76, 137, 0.24);
+      border-color: rgba(186, 214, 246, 0.55);
+    }
+    body.theme-light .card {
+      background: #ffffff;
+      border-color: #c9d9ea;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(47, 89, 131, 0.1);
+      backdrop-filter: none;
+    }
+    body.theme-light .section {
+      border-radius: 8px;
+      border-color: #d5e1ee;
+      background: #fdfefe;
+    }
+    body.theme-light .section h3,
+    body.theme-light .field label,
+    body.theme-light .wo-sub,
+    body.theme-light .wo-table th { color: #496784; }
+    body.theme-light .checks label {
+      background: #f5f9fe;
+      border-color: #d7e4f2;
+      border-radius: 7px;
+    }
+    body.theme-light .checks .choice-row {
+      background: #f2f7fd;
+      border: 1px solid #cfdff0;
+      border-radius: 7px;
+    }
+    body.theme-light .btn.primary {
+      background: linear-gradient(120deg, #1f68b1 0%, #2e8adf 100%);
+      box-shadow: 0 8px 16px rgba(28, 92, 154, 0.25);
+      border-radius: 8px;
+    }
+    body.theme-light .page-btn.is-active {
+      background: #ffffff;
+      color: #164877;
+      border-color: #ffffff;
+    }
+    body.theme-light .btn.ghost {
+      background: #edf4fb;
+      color: #1f4f7f;
+      border-color: #caddf1;
+      border-radius: 8px;
+    }
+    body.theme-light .workorder {
+      border-radius: 8px;
+      border-color: #d1e0ef;
+      background: #fefefe;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    body.theme-dark {
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: #e8f6ff;
+      background:
+        radial-gradient(circle at 15% 12%, rgba(0, 203, 255, 0.25), transparent 34%),
+        radial-gradient(circle at 84% 20%, rgba(0, 108, 255, 0.25), transparent 32%),
+        linear-gradient(170deg, #0a0f1b 0%, #090d16 48%, #070a11 100%);
+    }
+    body.theme-dark .hero {
+      background: linear-gradient(132deg, rgba(10, 28, 60, 0.8) 0%, rgba(9, 63, 108, 0.74) 55%, rgba(18, 125, 155, 0.74) 100%);
+      border-color: rgba(111, 218, 255, 0.45);
+      box-shadow: 0 16px 34px rgba(0, 0, 0, 0.45);
+    }
+    body.theme-dark .hero p { color: #bdefff; }
+    body.theme-dark .theme-bar {
+      background: rgba(15, 39, 72, 0.45);
+      border-color: rgba(109, 220, 255, 0.4);
+    }
+    body.theme-dark .page-btn {
+      color: #dcf7ff;
+      background: rgba(102, 198, 255, 0.12);
+      border-color: rgba(109, 220, 255, 0.34);
+    }
+    body.theme-dark .theme-btn { color: #dcf7ff; background: rgba(102, 198, 255, 0.12); }
+    body.theme-dark .theme-btn.is-active {
+      background: linear-gradient(120deg, #35d6ff 0%, #6ef4ff 100%);
+      color: #052332;
+      border-color: #8af3ff;
+    }
+    body.theme-dark .page-btn.is-active {
+      background: linear-gradient(120deg, #35d6ff 0%, #6ef4ff 100%);
+      color: #052332;
+      border-color: #8af3ff;
+    }
+    body.theme-dark .card {
+      background: rgba(8, 20, 38, 0.58);
+      border-color: rgba(106, 190, 230, 0.45);
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(14px);
+    }
+    body.theme-dark .section {
+      background: rgba(13, 29, 49, 0.72);
+      border-color: rgba(97, 176, 214, 0.38);
+    }
+    body.theme-dark .section h3,
+    body.theme-dark .field label,
+    body.theme-dark .wo-sub,
+    body.theme-dark .wo-table th { color: #9bcfdf; }
+    body.theme-dark input:not([type="checkbox"]):not([type="radio"]),
+    body.theme-dark select,
+    body.theme-dark textarea {
+      background: rgba(9, 23, 40, 0.9);
+      border-color: rgba(114, 204, 246, 0.42);
+      color: #e9f8ff;
+    }
+    body.theme-dark input:not([type="checkbox"]):not([type="radio"]):focus,
+    body.theme-dark select:focus,
+    body.theme-dark textarea:focus {
+      border-color: #5ed2ff;
+      box-shadow: 0 0 0 3px rgba(94, 210, 255, 0.2);
+    }
+    body.theme-dark .checks label {
+      background: rgba(15, 34, 54, 0.78);
+      border-color: rgba(106, 182, 220, 0.38);
+      color: #e8f6ff;
+    }
+    body.theme-dark .checks .choice-row {
+      background: rgba(13, 32, 52, 0.84);
+      border-color: rgba(111, 206, 238, 0.44);
+    }
+    body.theme-dark .btn.primary {
+      background: linear-gradient(120deg, #1ec6ff 0%, #2df2ff 100%);
+      color: #062533;
+      box-shadow: 0 8px 24px rgba(24, 179, 241, 0.35);
+    }
+    body.theme-dark .btn.ghost {
+      background: rgba(17, 40, 65, 0.8);
+      color: #d9f5ff;
+      border-color: rgba(103, 182, 219, 0.4);
+    }
+    body.theme-dark .workorder {
+      background: rgba(8, 24, 41, 0.75);
+      border-color: rgba(112, 194, 230, 0.45);
+      box-shadow: inset 0 1px 0 rgba(160, 232, 255, 0.08);
+    }
+    body.theme-dark .wo-table th,
+    body.theme-dark .wo-table td { border-bottom-color: rgba(104, 171, 201, 0.35); color: #effaff; }
+    @media (max-width: 1080px) {
+      .layout { grid-template-columns: 1fr; }
+      .right { position: static; }
+      .row.two, .row.three, .row.four, .money-grid, .checks, .frame-trim-grid, .item-grid { grid-template-columns: 1fr; }
+      #graphics_mode_row, #digital_choice_row, #vinyl_choice_row, #laminate_label,
+      #holes_choice_row, #corners_choice_row, #grommets_choice_row,
+      #posts_choice_row, #pvc_cover_label, #dig_label, #dig_choice_row, #wall_mount_choice_row, #bucket_height_row { grid-column: 1; }
+      .theme-bar, .page-nav { display: flex; width: 100%; }
+      .theme-btn { flex: 1; text-align: center; }
+      .page-btn { flex: 1; text-align: center; }
+    }
+    @media print {
+      body { background: #fff; }
+      .hero, .left, .toolbar, .page-nav { display: none !important; }
+      .layout { display: block; }
+      .right { border: 0; padding: 0; }
+      .workorder { border: 0; background: #fff; padding: 0; }
+      .page.hidden { display: none !important; }
+    }
+  </style>
+</head>
+<body class="theme-light">
+  <div class="wrap">
+    <section class="hero">
+      <h1>Pricing Worksheet v3.1</h1>
+      <p>Built from your worksheet form, with print-ready work order output.</p>
+      <div class="version-pill">Version v3.1</div>
+      <div class="theme-bar" role="group" aria-label="Theme selector">
+        <button type="button" class="theme-btn" data-theme="light">Light Mode</button>
+        <button type="button" class="theme-btn" data-theme="dark">Dark Mode</button>
+      </div>
+      <div class="page-nav" role="group" aria-label="Worksheet selector">
+        <button type="button" class="page-btn is-active" data-page="signage">Signage</button>
+        <button type="button" class="page-btn" data-page="vehicle">Vehicle Graphics</button>
+      </div>
+    </section>
+
+    <section class="page" id="page-signage">
+    <div class="layout">
+      <section class="card left">
+        <div class="section">
+          <h3>Job Info</h3>
+          <div class="row four">
+            <div class="field"><label>Date</label><input id="date" type="date"></div>
+            <div class="field"><label>Initials</label><input id="initials" type="text"></div>
+            <div class="field"><label>Customer</label><input id="customer" type="text"></div>
+            <div class="field"><label>Quantity</label><input id="qty" type="number" min="1" step="1" value="1"></div>
+          </div>
+          <div class="row two">
+            <div class="field"><label>Design</label><input id="design" type="text"></div>
+            <div class="field"><label>Sign Faces</label><select id="faces"><option value="Single Sided">Single Sided</option><option value="Double Sided">Double Sided</option></select></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Size & Substrate</h3>
+          <div class="row four">
+            <div class="field"><label>Width (in)</label><input id="width" type="number" min="1" step="0.25" value="24"></div>
+            <div class="field"><label>Height (in)</label><input id="height" type="number" min="1" step="0.25" value="18"></div>
+            <div class="field"><label>Sq. Ft.</label><input id="sqft" type="text" readonly></div>
+            <div class="field"><label>Substrate</label>
+              <select id="substrate">
+                <option>None</option><option>.040</option><option>.080</option><option>3MM PVC</option><option>4mm CORO</option><option>10mm CORO</option><option>ACRYLIC</option><option>BANNER</option><option>OTHER</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Graphics</h3>
+          <div class="checks">
+            <div class="choice-row show" id="graphics_mode_row">
+              <span>Graphics</span>
+              <select id="graphics_mode">
+                <option value="">None</option>
+                <option value="DIGITAL">Digital</option>
+                <option value="VINYL">Vinyl</option>
+              </select>
+            </div>
+            <div class="choice-row" id="digital_choice_row">
+              <span>Digital Type</span>
+              <select id="digital_type">
+                <option>Calendar</option>
+                <option>Premium</option>
+                <option>Reflective</option>
+                <option>Translucent</option>
+              </select>
+            </div>
+            <label class="conditional-label" id="laminate_label"><input id="laminate_opt" type="checkbox" class="opt" value="LAMINATE"> Laminate</label>
+            <div class="choice-row" id="vinyl_choice_row">
+              <span>Vinyl Type</span>
+              <select id="vinyl_type">
+                <option>Calendar</option>
+                <option>Cast</option>
+                <option>Reflective</option>
+                <option>Translucent</option>
+              </select>
+            </div>
+          </div>
+          <div class="item-grid" style="margin-top: 8px;">
+            <div class="field" id="digital_items_field"><label>Digital Items</label><input id="item_digital" type="number" min="0" step="1" value="0"></div>
+            <div class="field" id="vinyl_items_field"><label>Vinyl Items</label><input id="item_vinyl" type="number" min="0" step="1" value="0"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Extras</h3>
+          <!-- Add new option dropdown rows directly under the related checkbox and match its grid column in CSS. -->
+          <div class="checks">
+            <label><input id="holes_opt" type="checkbox" class="opt" value="HOLES"> Holes</label>
+            <label><input id="corners_opt" type="checkbox" class="opt" value="CORNERS"> Corners</label>
+            <div class="choice-row" id="holes_choice_row">
+              <span>Hole Size</span>
+              <select id="holes_size">
+                <option>1/8</option>
+                <option>1/4</option>
+                <option>3/8</option>
+                <option>1/2</option>
+              </select>
+            </div>
+            <div class="choice-row" id="corners_choice_row">
+              <span>Corner Radius</span>
+              <select id="corners_size">
+                <option>1</option>
+                <option>1/2</option>
+                <option>1/4</option>
+              </select>
+            </div>
+            <label><input id="grommets_opt" type="checkbox" class="opt" value="GROMMETS"> Grommets</label>
+            <div class="choice-row" id="grommets_choice_row">
+              <span>Pattern</span>
+              <select id="grommets_pattern">
+                <option>Top Corners</option>
+                <option>4 Corners</option>
+                <option>Every ___ Feet</option>
+              </select>
+              <span class="inline-conditional" id="grommets_spacing_wrap">
+                <input id="grommets_spacing" type="number" min="1" step="1" value="1">
+              </span>
+            </div>
+            <label><input type="checkbox" class="opt" value="VELCRO"> Velcro</label>
+            <label><input type="checkbox" class="opt" value="D/S TAPE"> D/S Tape</label>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Frame / Trim</h3>
+          <div class="frame-trim-grid">
+            <div class="frame-trim-col">
+              <label><input id="frame_included" type="checkbox"> Frame</label>
+              <div class="subchecks" id="frame_options">
+                <label><input type="radio" name="frame_choice" class="opt frame-opt" value="THIN WALL"> Thin Wall</label>
+                <label><input type="radio" name="frame_choice" class="opt frame-opt" value="WELDED"> Welded</label>
+              </div>
+            </div>
+            <div class="frame-trim-col">
+              <label><input id="trim_included" type="checkbox"> Trim <span id="trim_linear_ft">(0.00 LF)</span></label>
+              <div class="subchecks" id="trim_options">
+                <label><input type="radio" name="trim_choice" class="opt trim-opt" value="J TRIM"> J Trim</label>
+                <label><input type="radio" name="trim_choice" class="opt trim-opt" value="L TRIM"> L Trim</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Install</h3>
+          <div class="checks">
+            <label><input id="posts_opt" type="checkbox" class="opt" value="POSTS"> Posts</label>
+            <label><input id="wall_mount_opt" type="checkbox" class="opt" value="WALL MOUNT"> Wall Mount</label>
+            <label><input id="window_graphics_opt" type="checkbox" class="opt" value="WINDOW GRAPHICS"> Window Graphics</label>
+            <div class="choice-row" id="posts_choice_row">
+              <span>Post Type</span>
+              <select id="posts_type">
+                <option>Wood</option>
+                <option>Aluminum</option>
+                <option>U-Channel</option>
+              </select>
+            </div>
+            <label class="conditional-label" id="pvc_cover_label"><input id="pvc_cover_opt" type="checkbox" class="opt" value="PVC COVER"> PVC Cover</label>
+            <div class="choice-row" id="wall_mount_choice_row">
+              <span>Mount Type</span>
+              <select id="wall_mount_type">
+                <option>Cleats</option>
+                <option>14s</option>
+                <option>Deck Screws</option>
+                <option>Zipits</option>
+                <option>Tapcon</option>
+                <option>Tape</option>
+                <option>Unknown</option>
+              </select>
+            </div>
+            <label class="conditional-label" id="dig_label"><input id="dig_opt" type="checkbox" class="opt" value="DIG"> Dig</label>
+            <label><input id="bucket_truck_opt" type="checkbox" class="opt" value="BUCKET TRUCK"> Bucket Truck</label>
+            <div class="choice-row" id="dig_choice_row">
+              <span>Surface</span>
+              <select id="dig_surface">
+                <option>Dirt</option>
+                <option>Asphalt</option>
+                <option>Concrete</option>
+                <option>Unknown</option>
+              </select>
+            </div>
+            <div class="choice-row" id="bucket_height_row">
+              <span>Approx Height (ft)</span>
+              <input id="bucket_height" type="number" min="0" step="1" value="0">
+            </div>
+          </div>
+          <div class="field" style="margin-top: 8px;">
+            <label>Special Instructions</label>
+            <textarea id="install_instructions" placeholder="Install-specific notes"></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Labor / Travel / Design</h3>
+          <div class="row four">
+            <div class="field"><label>How Many Men</label><input id="men" type="number" min="0" step="1" value="0"></div>
+            <div class="field"><label>Man Hours</label><input id="man_hours" type="number" min="0" step="0.5" value="0"></div>
+            <div class="field"><label>Distance</label><input id="distance" type="number" min="0" step="1" value="0"></div>
+            <div class="field"><label>Design Hrs</label><input id="design_hours" type="number" min="0" step="0.5" value="0"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Pricing</h3>
+            <div class="pricing-tools">
+              <label><input id="auto_price" type="checkbox" checked> Auto Price</label>
+              <div class="mini-actions">
+                <button class="mini-btn" id="recalc_sign" type="button">Recalculate</button>
+              </div>
+            </div>
+            <p class="mini-note" id="pricing_note">Auto pricing is on. Turn it off any time for manual override.</p>
+            <div class="money-grid">
+              <div class="field"><label>Substrate Price</label><input id="p_substrate" type="number" step="0.01" value="0"></div>
+              <div class="field"><label>Graphics Price</label><input id="p_graphics" type="number" step="0.01" value="0"></div>
+              <div class="field"><label>Design / Prep Price</label><input id="p_fab" type="number" step="0.01" value="0"></div>
+              <div class="field"><label>Install Price</label><input id="p_install" type="number" step="0.01" value="0"></div>
+              <div class="field"><label>Install Hardware Price</label><input id="p_hardware" type="number" step="0.01" value="0"></div>
+              <div class="field"><label>Other</label><input id="p_other" type="number" step="0.01" value="0"></div>
+            </div>
+            <div class="breakdown-card">
+              <div class="breakdown-head">
+                <strong>Pricing Breakdown</strong>
+                <span id="pricing_breakdown_status">Live</span>
+              </div>
+              <div class="breakdown-list" id="pricing_breakdown_rows">
+                <div class="breakdown-row">
+                  <div>
+                    <strong>Waiting for pricing input</strong>
+                    <small>Pick a substrate, graphics, or extras to see the math here.</small>
+                  </div>
+                  <div class="amount">$0.00</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <div class="section">
+          <h3>Notes</h3>
+          <div class="field"><label>Work Notes</label><textarea id="notes"></textarea></div>
+        </div>
+      </section>
+
+      <section class="card right">
+        <div class="toolbar">
+          <button class="btn ghost" id="clear" type="button">Clear</button>
+          <button class="btn primary" id="print" type="button">Print Work Order</button>
+        </div>
+
+        <div class="workorder" id="wo">
+          <div class="wo-head">
+            <div>
+              <h2 class="wo-title">Work Order</h2>
+              <p class="wo-sub" id="wo_customer">Customer: -</p>
+              <p class="wo-sub" id="wo_design">Design: -</p>
+            </div>
+            <div style="text-align:right;">
+              <p class="wo-sub" id="wo_date">Date: -</p>
+              <p class="wo-sub" id="wo_initials">Initials: -</p>
+            </div>
+          </div>
+
+          <table class="wo-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Detail</th>
+                <th class="num">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Quantity</td><td>Sign Faces</td><td class="num" id="wo_qty">1 / Single Sided</td></tr>
+              <tr><td>Size</td><td>Substrate</td><td class="num" id="wo_size">24 x 18 in</td></tr>
+              <tr><td>Area</td><td>Sq. Ft.</td><td class="num" id="wo_sqft">3.00</td></tr>
+              <tr><td>Install</td><td>Men / Man Hrs / Distance / Design Hrs</td><td class="num" id="wo_install">0 / 0 / 0 / 0</td></tr>
+            </tbody>
+          </table>
+
+          <div class="section" style="margin-top:10px;">
+            <h3 style="margin-bottom:6px;">Selected Options</h3>
+            <ul class="list" id="wo_opts"><li>None</li></ul>
+          </div>
+
+          <div class="section">
+            <h3 style="margin-bottom:6px;">Pricing</h3>
+            <table class="wo-table">
+              <tbody>
+                <tr><td>Substrate</td><td></td><td class="num" id="wo_p_substrate">$0.00</td></tr>
+                <tr><td>Graphics</td><td></td><td class="num" id="wo_p_graphics">$0.00</td></tr>
+                <tr><td>Design / Prep</td><td></td><td class="num" id="wo_p_fab">$0.00</td></tr>
+                <tr><td>Install</td><td></td><td class="num" id="wo_p_install">$0.00</td></tr>
+                <tr><td>Install Hardware</td><td></td><td class="num" id="wo_p_hardware">$0.00</td></tr>
+                <tr><td>Other</td><td></td><td class="num" id="wo_p_other">$0.00</td></tr>
+                <tr><td><strong>Total Price (no tax)</strong></td><td></td><td class="num" id="wo_total"><strong>$0.00</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="section">
+            <h3 style="margin-bottom:6px;">Notes</h3>
+            <div id="wo_notes">-</div>
+          </div>
+        </div>
+      </section>
+    </div>
+    </section>
+
+    <section class="page hidden" id="page-vehicle">
+      <div class="layout">
+        <section class="card left">
+          <div class="section">
+            <h3>Job Info</h3>
+            <div class="row four">
+              <div class="field"><label>Date</label><input id="vg_date" type="date"></div>
+              <div class="field"><label>Initials</label><input id="vg_initials" type="text"></div>
+              <div class="field"><label>Customer</label><input id="vg_customer" type="text"></div>
+              <div class="field"><label>Quantity</label><input id="vg_qty" type="number" min="1" step="1" value="1"></div>
+            </div>
+            <div class="row two">
+              <div class="field"><label>Vehicle / Project</label><input id="vg_design" type="text"></div>
+              <div class="field"><label>Service Type</label>
+                <select id="vg_service_type">
+                  <option>Full Wrap</option>
+                  <option>Partial Wrap</option>
+                  <option>Lettering</option>
+                  <option>Decals</option>
+                  <option>Perforated Window Graphics</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>Vehicle Graphics</h3>
+            <div class="checks">
+              <label><input id="vg_location_shop" type="radio" name="vg_location" value="IN SHOP"> In Shop</label>
+              <label><input id="vg_location_onsite" type="radio" name="vg_location" value="ONSITE"> Onsite</label>
+              <label><input id="vg_remove_existing" type="checkbox" value="REMOVE EXISTING"> Remove Existing Graphics</label>
+              <label><input id="vg_laminate" type="checkbox" value="LAMINATE"> Laminate</label>
+              <label><input id="vg_window_perf" type="checkbox" value="WINDOW PERF"> Window Perf</label>
+              <label><input id="vg_install_only" type="checkbox" value="INSTALL ONLY"> Install Only</label>
+            </div>
+            <div class="row two" style="margin-top:8px;">
+              <div class="field"><label>Vehicle Count</label><input id="vg_vehicle_count" type="number" min="0" step="1" value="1"></div>
+              <div class="field"><label>Coverage Notes</label><input id="vg_coverage" type="text" placeholder="Sides, rear, hood, windows, etc."></div>
+            </div>
+            <div class="row three" style="margin-top:8px;">
+              <div class="field"><label>Sq. Ft. Per Vehicle</label><input id="vg_sqft" type="number" min="0" step="0.25" value="0"></div>
+              <div class="field"><label>Media Type</label>
+                <select id="vg_media_type">
+                  <option value="printed_calendared">Printed Calendared</option>
+                  <option value="printed_cast">Printed Cast</option>
+                  <option value="cut_vinyl">Cut Vinyl</option>
+                  <option value="reflective">Reflective</option>
+                  <option value="window_perf">Window Perf</option>
+                </select>
+              </div>
+              <div class="field"><label>Removal Hrs</label><input id="vg_removal_hours" type="number" min="0" step="0.5" value="0"></div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>Install / Travel / Design</h3>
+            <div class="row four">
+              <div class="field"><label>How Many Men</label><input id="vg_men" type="number" min="0" step="1" value="0"></div>
+              <div class="field"><label>Man Hours</label><input id="vg_man_hours" type="number" min="0" step="0.5" value="0"></div>
+              <div class="field"><label>Distance</label><input id="vg_distance" type="number" min="0" step="1" value="0"></div>
+              <div class="field"><label>Design Hrs</label><input id="vg_design_hours" type="number" min="0" step="0.5" value="0"></div>
+            </div>
+            <div class="field">
+              <label>Special Instructions</label>
+              <textarea id="vg_install_instructions" placeholder="Vehicle graphics notes, scheduling, prep, install, etc."></textarea>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>Pricing</h3>
+            <div class="pricing-tools">
+              <label><input id="vg_auto_price" type="checkbox" checked> Auto Price</label>
+              <div class="mini-actions">
+                <button class="mini-btn" id="recalc_vehicle" type="button">Recalculate</button>
+              </div>
+            </div>
+            <p class="mini-note" id="vg_pricing_note">Vehicle pricing is automatic from sqft, media, labor, removal, and design.</p>
+            <div class="money-grid">
+              <div class="field"><label>Graphics Price</label><input id="vg_p_graphics" type="number" step="0.01" value="0"></div>
+              <div class="field"><label>Design / Prep Price</label><input id="vg_p_fab" type="number" step="0.01" value="0"></div>
+              <div class="field"><label>Install Price</label><input id="vg_p_install" type="number" step="0.01" value="0"></div>
+              <div class="field"><label>Install Hardware Price</label><input id="vg_p_hardware" type="number" step="0.01" value="0"></div>
+              <div class="field"><label>Removal Price</label><input id="vg_p_removal" type="number" step="0.01" value="0"></div>
+              <div class="field"><label>Other</label><input id="vg_p_other" type="number" step="0.01" value="0"></div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>Notes</h3>
+            <div class="field"><label>Work Notes</label><textarea id="vg_notes"></textarea></div>
+          </div>
+        </section>
+
+        <section class="card right">
+          <div class="toolbar">
+            <button class="btn ghost" id="clear_vehicle" type="button">Clear</button>
+            <button class="btn primary" id="print_vehicle" type="button">Print Work Order</button>
+          </div>
+
+          <div class="workorder" id="vg_wo">
+            <div class="wo-head">
+              <div>
+                <h2 class="wo-title">Vehicle Graphics Work Order</h2>
+                <p class="wo-sub" id="vg_wo_customer">Customer: -</p>
+                <p class="wo-sub" id="vg_wo_design">Vehicle / Project: -</p>
+              </div>
+              <div style="text-align:right;">
+                <p class="wo-sub" id="vg_wo_date">Date: -</p>
+                <p class="wo-sub" id="vg_wo_initials">Initials: -</p>
+              </div>
+            </div>
+
+            <table class="wo-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Detail</th>
+                  <th class="num">Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Quantity</td><td>Vehicle Count</td><td class="num" id="vg_wo_qty">1 / 1</td></tr>
+                <tr><td>Service</td><td>Type</td><td class="num" id="vg_wo_service">Full Wrap</td></tr>
+                <tr><td>Coverage</td><td>Notes</td><td class="num" id="vg_wo_coverage">-</td></tr>
+                <tr><td>Install</td><td>Men / Man Hrs / Distance / Design Hrs</td><td class="num" id="vg_wo_install">0 / 0 / 0 / 0</td></tr>
+              </tbody>
+            </table>
+
+            <div class="section" style="margin-top:10px;">
+              <h3 style="margin-bottom:6px;">Selected Options</h3>
+              <ul class="list" id="vg_wo_opts"><li>None</li></ul>
+            </div>
+
+            <div class="section">
+              <h3 style="margin-bottom:6px;">Pricing</h3>
+              <table class="wo-table">
+                <tbody>
+                  <tr><td>Graphics</td><td></td><td class="num" id="vg_wo_p_graphics">$0.00</td></tr>
+                  <tr><td>Design / Prep</td><td></td><td class="num" id="vg_wo_p_fab">$0.00</td></tr>
+                  <tr><td>Install</td><td></td><td class="num" id="vg_wo_p_install">$0.00</td></tr>
+                  <tr><td>Install Hardware</td><td></td><td class="num" id="vg_wo_p_hardware">$0.00</td></tr>
+                  <tr><td>Removal</td><td></td><td class="num" id="vg_wo_p_removal">$0.00</td></tr>
+                  <tr><td>Other</td><td></td><td class="num" id="vg_wo_p_other">$0.00</td></tr>
+                  <tr><td><strong>Total Price (no tax)</strong></td><td></td><td class="num" id="vg_wo_total"><strong>$0.00</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="section">
+              <h3 style="margin-bottom:6px;">Notes</h3>
+              <div id="vg_wo_notes">-</div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </div>
+
+  <script src="pricing.js"></script>
+</body>
+</html>
+

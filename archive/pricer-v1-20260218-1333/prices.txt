@@ -1,0 +1,138 @@
+# CJG Pricing (edit anytime)
+# format:
+# MATERIAL,<key>,<label>,<price_per_sqft>
+# PRINT,<key>,<label>,<price_per_sqft>
+# PLOT,<key>,<label>,<price_per_sqft>   # use for mutually-exclusive vinyl options
+# SHIRT,<key>,<label>,<base>,<each>
+# GARMENT,<key>,<label>,<product_type>,<tier>,<price_each>
+# GARMENT_GRAPHICS,<key>,<label>,<placement(front/back)>,<price_1>,<price_2>,<price_3>,<price_dtf>
+# LED_MODS,<key>,<label>,<color_mode>,<voltage>,<watts_per_ft>,<price_per_ft>
+# LED_RIBBON,<key>,<label>,<density>,<color_mode>,<voltage>,<watts_per_ft>,<price_per_ft>
+# CONTROLLER,<key>,<label>,<price>
+# WHOLESALE_SUBOUT,<key>,<label>,<unit(sqft|linft|each)>,<price>,<group>
+# HARBOR_FREQUENT,<key>,<label>,<product_type>,<code>,<price_each>
+
+# Harbor generic sign materials (normalized to per sqft):
+# 4x10 .040 aluminum @ 156.54 -> 3.91/sqft
+# 4x8 .080 aluminum @ 210.30 -> 6.57/sqft
+# 54x164 13oz banner @ 164.15 -> 0.22/sqft
+# 4x8x3mm ACM @ 59.16 -> 1.85/sqft
+MATERIAL,alum_040,040 Aluminum,3.91
+MATERIAL,alum_080,080 Aluminum,6.57
+MATERIAL,banner_13oz,13oz Banner,0.22
+MATERIAL,acm_3mm,3mm ACM,1.85
+MATERIAL,decal,Decal,0.00
+
+PRINT,eco,Eco-Solvent Print,4.00
+PRINT,uv,UV Print,5.00
+
+# Harbor generic vinyl (mutually exclusive choice):
+# cast black 190 @ 69.77 for 24in x 10yd (60 sqft) -> 1.16/sqft
+# calendar black 190 @ 26.04 for 24in x 10yd (60 sqft) -> 0.43/sqft
+PLOT,cast_vinyl,Cast Vinyl,1.16
+PLOT,calendar_vinyl,Calendar Vinyl,0.43
+
+# WYLD/GFI page 1 - wholesale subout (published 2024-03-01)
+WHOLESALE_SUBOUT,banner_std_13oz_raw,Standard 13oz Matte Scrim (Raw),sqft,1.50,Banner
+WHOLESALE_SUBOUT,banner_std_13oz_trimmed,Standard 13oz Matte Scrim (Trimmed),sqft,2.00,Banner
+WHOLESALE_SUBOUT,banner_std_13oz_finished,Standard 13oz Matte Scrim (Hem/Grom/Pole),sqft,2.50,Banner
+WHOLESALE_SUBOUT,banner_premium_15oz,Premium 15oz Smooth (Hem/Grom/Pole),sqft,3.00,Banner
+WHOLESALE_SUBOUT,banner_blockout_18oz_finished,Heavy 18oz Blockout (Finished),sqft,3.50,Banner
+WHOLESALE_SUBOUT,banner_blockout_18oz_true_ds,Heavy 18oz Blockout (True Double Sided),sqft,4.50,Banner
+WHOLESALE_SUBOUT,banner_blockout_18oz_hd_ds,Heavy 18oz Blockout (HD Double Sided),sqft,5.50,Banner
+WHOLESALE_SUBOUT,banner_backlit_vinyl,Backlit Vinyl (Flex Face Double-Density),sqft,5.00,Banner
+WHOLESALE_SUBOUT,banner_liquid_lam,Liquid Lamination (Matte/Gloss UV),sqft,1.50,Banner
+WHOLESALE_SUBOUT,banner_mesh_finished,Mesh Banner (Hem/Grom/Pole),sqft,2.65,Banner
+WHOLESALE_SUBOUT,banner_reinforced_hems,Reinforced 3rd Layer Hems,linft,1.25,Banner
+WHOLESALE_SUBOUT,misc_poster_10pt,Poster Paper 10pt,sqft,1.50,Misc
+WHOLESALE_SUBOUT,misc_static_cling,Static Cling (White/Clear CMYK),sqft,3.50,Misc
+WHOLESALE_SUBOUT,misc_interior_glass_2nd_surface,Interior Glass (2nd Surface White Ink),sqft,5.00,Misc
+WHOLESALE_SUBOUT,misc_floor_graphic_indoor,Floor Graphic Indoor,sqft,4.50,Misc
+WHOLESALE_SUBOUT,misc_floor_graphic_outdoor_hightac,Floor Graphic Outdoor High Tac,sqft,6.00,Misc
+WHOLESALE_SUBOUT,misc_wall_graphic_low_tac,Low-Tac Air-Egress Wall Graphic,sqft,3.95,Misc
+WHOLESALE_SUBOUT,misc_magnet_standard,Standard Magnet (Direct, No Lam),sqft,5.00,Misc
+WHOLESALE_SUBOUT,misc_magnet_020_030,Magnet (.020/.030),sqft,6.00,Misc
+WHOLESALE_SUBOUT,misc_artist_canvas,Artist Canvas (Digital),sqft,5.50,Misc
+WHOLESALE_SUBOUT,misc_polypropylene_8mil,Non-Curling 8mil Polypropylene,sqft,4.00,Misc
+WHOLESALE_SUBOUT,misc_duratrans_8mil,Duratrans Backlit Film 8mil,sqft,5.00,Misc
+WHOLESALE_SUBOUT,psa_standard_self_adhesive,Standard Self-Adhesive Vinyl + Lam,sqft,4.00,PSA
+WHOLESALE_SUBOUT,psa_hi_tack_self_adhesive,Self-Adhesive Hi-Tack Vinyl + Lam,sqft,4.50,PSA
+WHOLESALE_SUBOUT,psa_wrap_cast_lam,Premium Wrap Self-Adhesive + Cast Gloss Lam,sqft,5.00,PSA
+WHOLESALE_SUBOUT,psa_backlit_clear_white,Backlit Self-Adhesive (Clear/White),sqft,6.00,PSA
+WHOLESALE_SUBOUT,psa_backlit_day_night,Backlit Self-Adhesive (Day-Night),sqft,7.00,PSA
+WHOLESALE_SUBOUT,psa_reflective,Reflective Self-Adhesive + Lam,sqft,8.00,PSA
+WHOLESALE_SUBOUT,psa_window_perf_economy,Economy Window Perf,sqft,3.50,PSA
+WHOLESALE_SUBOUT,psa_window_perf_premium,Premium Window Perf,sqft,5.00,PSA
+WHOLESALE_SUBOUT,psa_window_perf_optical_lam,Window Perf + Optically Clear Lam,sqft,6.50,PSA
+WHOLESALE_SUBOUT,psa_window_perf_2nd_surface,2nd Surface Window Perf,sqft,7.50,PSA
+WHOLESALE_SUBOUT,psa_uv_inhibitive_lam,UV Inhibitive Film Lamination,sqft,1.00,PSA
+WHOLESALE_SUBOUT,psa_dry_erase_lam,Dry-Erase Lamination,sqft,1.50,PSA
+WHOLESALE_SUBOUT,rigid_coroplast_4mm,Coroplast 4mm,sqft,2.50,Rigid
+WHOLESALE_SUBOUT,rigid_coroplast_6mm,Coroplast 6mm,sqft,3.50,Rigid
+WHOLESALE_SUBOUT,rigid_coroplast_10mm,Coroplast 10mm,sqft,5.00,Rigid
+WHOLESALE_SUBOUT,rigid_coroplast_18x24_ds_10_18,Coroplast 4mm 18x24 DS (10-18 Qty),each,10.00,Rigid
+WHOLESALE_SUBOUT,rigid_coroplast_18x24_ds_20_90,Coroplast 4mm 18x24 DS (20-90 Qty),each,8.00,Rigid
+WHOLESALE_SUBOUT,rigid_coroplast_18x24_ds_100_plus,Coroplast 4mm 18x24 DS (100+ Qty),each,7.50,Rigid
+WHOLESALE_SUBOUT,rigid_foamboard_3_16,Standard 3/16 Foamboard,sqft,3.00,Rigid
+WHOLESALE_SUBOUT,rigid_ultraboard_3_16,Ultraboard 3/16 Rigidboard,sqft,4.00,Rigid
+WHOLESALE_SUBOUT,rigid_ultraboard_half_inch,Ultraboard 1/2 Rigidboard,sqft,5.50,Rigid
+WHOLESALE_SUBOUT,rigid_ultraboard_one_inch,Ultraboard 1 Rigidboard,sqft,7.50,Rigid
+WHOLESALE_SUBOUT,rigid_aluminum_040,Aluminum .040,sqft,8.00,Rigid
+WHOLESALE_SUBOUT,rigid_aluminum_060,Aluminum .060,sqft,10.00,Rigid
+WHOLESALE_SUBOUT,rigid_acm_3mm,3mm Aluminum Composite Sheet,sqft,6.00,Rigid
+WHOLESALE_SUBOUT,rigid_acm_3mm_lam,3mm Aluminum Composite Sheet (Laminated),sqft,7.00,Rigid
+WHOLESALE_SUBOUT,rigid_styrene_020,Styrene .020,sqft,2.75,Rigid
+WHOLESALE_SUBOUT,rigid_styrene_040,Styrene .040,sqft,3.50,Rigid
+WHOLESALE_SUBOUT,rigid_styrene_060,Styrene .060,sqft,4.50,Rigid
+WHOLESALE_SUBOUT,rigid_pvc_3mm,PVC Board 3mm,sqft,3.00,Rigid
+WHOLESALE_SUBOUT,rigid_pvc_6mm,PVC Board 6mm,sqft,6.50,Rigid
+WHOLESALE_SUBOUT,rigid_pvc_13mm,PVC Board 13mm,sqft,8.00,Rigid
+WHOLESALE_SUBOUT,addon_second_side_print,2nd Side Printing Add-On,sqft,1.25,Add-On
+
+SHIRT,g2000,Gildan 2000 (blank),4.00,0.00
+SHIRT,htv_basic,HTV Basic (per shirt),0.00,6.00
+
+GARMENT,shirt_eco,Shirt Eco,shirt,eco,10.00
+GARMENT,shirt_premium,Shirt Premium,shirt,premium,14.00
+GARMENT,hoodie_eco,Hoodie Eco,hoodie,eco,22.00
+GARMENT,hoodie_premium,Hoodie Premium,hoodie,premium,29.00
+
+# Generic graphics add-on pricing (per garment)
+# Source basis: 613 Originals (Varsity + DTF), sampled from visible mid-tier quantity tables.
+# 1/2/3 color sourced from Varsity screen transfer table; DTF sourced from DTF table.
+GARMENT_GRAPHICS,front_full,Front Full,front,2.58,5.06,7.29,2.95
+GARMENT_GRAPHICS,front_left_breast,Front Left Breast,front,1.72,3.43,5.08,0.61
+GARMENT_GRAPHICS,front_none,Front None,front,0.00,0.00,0.00,0.00
+GARMENT_GRAPHICS,back_full,Back Full,back,2.58,5.06,7.29,2.95
+GARMENT_GRAPHICS,back_none,Back None,back,0.00,0.00,0.00,0.00
+
+LED_MODS,mods_white,Modules White,white,12,2.2,6.00
+LED_MODS,mods_color,Modules Color,color,12,2.8,7.50
+LED_MODS,mods_rgb,Modules RGB,rgb,12,3.8,9.00
+
+LED_RIBBON,ribbon_std_white_5v,Ribbon Std White 5V,standard,white,5,1.5,4.20
+LED_RIBBON,ribbon_std_color_12v,Ribbon Std Color 12V,standard,color,12,2.0,5.50
+LED_RIBBON,ribbon_high_rgb_12v,Ribbon High RGB 12V,high,rgb,12,3.6,8.00
+LED_RIBBON,ribbon_high_argb_5v,Ribbon High ARGB 5V,high,argb,5,4.4,9.00
+LED_RIBBON,ribbon_high_rgb_24v,Ribbon High RGB 24V,high,rgb,24,3.2,8.80
+
+CONTROLLER,eco,Eco Controller,15.00
+CONTROLLER,premium,Premium Controller,28.00
+CONTROLLER,remote,Remote Controller,35.00
+CONTROLLER,app,App Support Controller,45.00
+
+# Harbor frequents (auto-generated by sync)
+
+# Harbor frequents (auto-generated by sync)
+
+# Harbor frequents (auto-generated by sync)
+HARBOR_FREQUENT,32223k_24_x_10_yd_black_190,24" x 10 yd | Black 190,Plotter Cut Films,32223K,26.04
+HARBOR_FREQUENT,410040gbkw_4_x_10_x_040_black_side_masked,4' x 10' x .040"  | Black Side Masked,Aluminum Sheets,410040GBKW,156.54
+HARBOR_FREQUENT,48080mill_4_x_8_x_080_1_side_masked,4' x 8' x .080" | 1 Side Masked,Aluminum Sheets,48080MILL,210.30
+HARBOR_FREQUENT,4810mcorow_4_x_8_x_10_mm_white_8_flutes,4' x 8' x 10 mm  |  White | 8' Flutes,Corrugated Plastic,4810MCOROW,38.78
+HARBOR_FREQUENT,48316ctw_4_x_8_x_3_16_white_7328_paper_mask,4' x 8' x 3/16"  | White (7328) | Paper Mask,Acrylic Sheet,48316CTW,103.94
+HARBOR_FREQUENT,483m006_4_x_8_x_3_mm_white_2_side,4' x 8' x 3 mm    |   White  (2 Side),Metal Faced Panels,483M006,59.16
+HARBOR_FREQUENT,484mcorow_4_x_8_x_4_mm_white_8_flutes,4' x 8' x 4 mm | White | 8' Flutes,Corrugated Plastic,484MCOROW,15.09
+HARBOR_FREQUENT,486mktw_4_x_8_x_6_mm_1_4_komatex_white,4' x 8' x 6 mm (1/4") | Komatex | White,PVC Sheet,486MKTW,65.90
+HARBOR_FREQUENT,92664k_24_x_10_yd_black_190,24" x 10 yd | Black 190,Plotter Cut Films,92664K,69.77
+HARBOR_FREQUENT,jf_m_137050_54_x_164_13_oz_matte,54" x 164'   |  13 oz  |      Matte,Banner and Film Media,JF-M-137050,164.15

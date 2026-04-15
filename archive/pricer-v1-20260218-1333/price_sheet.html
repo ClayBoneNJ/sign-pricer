@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Live Price Sheet</title>
+  <style>
+    body { font-family: "Bahnschrift","Segoe UI",sans-serif; margin: 0; background: #f4f7f3; color: #102017; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 20px; }
+    .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    a { color: #0c7f52; text-decoration: none; font-weight: 700; }
+    .card { background: #fff; border: 1px solid #dce5df; border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; border-bottom: 1px solid #eef3ef; padding: 8px; font-size: 14px; }
+    th { font-size: 12px; color: #5d6f63; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <h1>Live Price Sheet</h1>
+      <a href="/">Back To Dashboard</a>
+    </div>
+    <div class="card">
+      <h2>Materials ($/sqft)</h2>
+      <table id="tbl-material"><thead><tr><th>Key</th><th>Label</th><th>Price</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div class="card">
+      <h2>Print ($/sqft)</h2>
+      <table id="tbl-print"><thead><tr><th>Key</th><th>Label</th><th>Price</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div class="card">
+      <h2>Vinyl ($/sqft, mutually exclusive)</h2>
+      <table id="tbl-plot"><thead><tr><th>Key</th><th>Label</th><th>Price</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div class="card">
+      <h2>Garments ($/each)</h2>
+      <table id="tbl-garment"><thead><tr><th>Key</th><th>Label</th><th>Type</th><th>Tier</th><th>Price</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div class="card">
+      <h2>Garment Graphics ($/garment)</h2>
+      <table id="tbl-gfx"><thead><tr><th>Placement</th><th>Key</th><th>Label</th><th>1 Color</th><th>2 Color</th><th>3 Color</th><th>DTF</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div class="card">
+      <h2>Harbor Frequents ($ each)</h2>
+      <table id="tbl-hf"><thead><tr><th>Key</th><th>Label</th><th>Type</th><th>Code</th><th>Price</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <script>
+    function money(v) { return "$" + Number(v).toFixed(2); }
+    function fillRateTable(tableId, map) {
+      const body = document.querySelector(`#${tableId} tbody`);
+      body.innerHTML = "";
+      Object.entries(map).forEach(([key, item]) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${key}</td><td>${item.label}</td><td>${money(item.price)}</td>`;
+        body.appendChild(tr);
+      });
+    }
+    function fillGarmentTable(map) {
+      const body = document.querySelector("#tbl-garment tbody");
+      body.innerHTML = "";
+      Object.entries(map).forEach(([type, tiers]) => {
+        Object.entries(tiers).forEach(([tier, item]) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${item.key}</td><td>${item.label}</td><td>${type}</td><td>${tier}</td><td>${money(item.price)}</td>`;
+          body.appendChild(tr);
+        });
+      });
+    }
+    function fillGraphicsTable(map) {
+      const body = document.querySelector("#tbl-gfx tbody");
+      body.innerHTML = "";
+      ["front", "back"].forEach((placement) => {
+        const bucket = map[placement] || {};
+        Object.entries(bucket).forEach(([key, item]) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${placement}</td><td>${key}</td><td>${item.label}</td><td>${money(item.price_1)}</td><td>${money(item.price_2)}</td><td>${money(item.price_3)}</td><td>${money(item.price_dtf)}</td>`;
+          body.appendChild(tr);
+        });
+      });
+    }
+    function fillHarborFrequentTable(map) {
+      const body = document.querySelector("#tbl-hf tbody");
+      body.innerHTML = "";
+      Object.entries(map || {}).forEach(([key, item]) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${key}</td><td>${item.label}</td><td>${item.product_type}</td><td>${item.code}</td><td>${money(item.price)}</td>`;
+        body.appendChild(tr);
+      });
+    }
+    fetch("/api/options")
+      .then((r) => r.json())
+      .then((data) => {
+        fillRateTable("tbl-material", data.material || {});
+        fillRateTable("tbl-print", data.print || {});
+        fillRateTable("tbl-plot", data.plot || {});
+        fillGarmentTable(data.garment || {});
+        fillGraphicsTable(data.garment_graphics || {});
+        fillHarborFrequentTable(data.harbor_frequent || {});
+      });
+  </script>
+</body>
+</html>

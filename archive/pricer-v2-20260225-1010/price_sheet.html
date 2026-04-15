@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Substrate Price Sheet</title>
+  <style>
+    :root {
+      --bg: #f3f7f5;
+      --card: #ffffff;
+      --ink: #182620;
+      --muted: #5f7268;
+      --line: #d9e4dd;
+      --accent: #0d8a5f;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Bahnschrift", "Segoe UI", sans-serif; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 20px 16px 30px; }
+    .head {
+      background: linear-gradient(140deg, #084430 0%, #0c734e 72%, #149767 100%);
+      color: #f1fff8;
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+    .head h1 { margin: 0 0 3px; font-size: 24px; }
+    .head p { margin: 0; color: #daf5e8; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #eaf1ed; text-align: left; }
+    th { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.35px; background: #f9fcfa; }
+    th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    tbody tr:hover { background: #fbfefc; }
+    .muted { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="head">
+      <h1>Substrate Price Sheet</h1>
+      <p id="meta" class="muted">Loading pricing...</p>
+    </section>
+    <section class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Substrate</th>
+            <th>Item Size</th>
+            <th class="num">Item Price</th>
+            <th class="num">Item Sq Ft</th>
+            <th class="num">$ / Sq Ft</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </section>
+  </div>
+
+  <script src="prices_data.js"></script>
+  <script>
+    const FALLBACK_PRICE_DATA = {
+      source: "Embedded fallback",
+      updated: "2026-02-18",
+      substrates: [
+        { key: "alum_040", label: "040 Aluminum", price: 3.91, item_size: "4' x 10'", item_price: 156.54, item_sqft: 40.0 },
+        { key: "alum_080", label: "080 Aluminum", price: 6.57, item_size: "4' x 8'", item_price: 210.30, item_sqft: 32.0 },
+        { key: "acm_3mm", label: "3mm ACM", price: 1.85, item_size: "4' x 8'", item_price: 59.16, item_sqft: 32.0 },
+        { key: "coro_4mm", label: "Coroplast 4mm", price: 0.47, item_size: "4' x 8'", item_price: 15.09, item_sqft: 32.0 },
+        { key: "coro_10mm", label: "Coroplast 10mm", price: 1.21, item_size: "4' x 8'", item_price: 38.78, item_sqft: 32.0 },
+        { key: "pvc_6mm", label: "PVC 6mm", price: 2.06, item_size: "4' x 8'", item_price: 65.90, item_sqft: 32.0 },
+        { key: "acrylic_3_16", label: "3/16 Acrylic", price: 3.25, item_size: "4' x 8'", item_price: 103.94, item_sqft: 32.0 },
+        { key: "banner_13oz", label: "13oz Banner", price: 0.22, item_size: "54\" x 164'", item_price: 164.15, item_sqft: 738.0 }
+      ]
+    };
+
+    function money(v) { return "$" + Number(v || 0).toFixed(2); }
+    function num(v, digits) { return Number(v || 0).toFixed(digits); }
+
+    function render(data) {
+      const rows = document.getElementById("rows");
+      const substrates = Array.isArray(data.substrates) ? data.substrates : [];
+      rows.innerHTML = "";
+
+      substrates
+        .filter((s) => String(s.key) !== "none")
+        .forEach((s) => {
+          const itemPrice = Number(s.item_price || 0);
+          const itemSqft = Number(s.item_sqft || 0);
+          const calcSqft = itemSqft > 0 ? (itemPrice / itemSqft) : 0;
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${s.label || ""}</td>
+            <td>${s.item_size || "N/A"}</td>
+            <td class="num">${money(itemPrice)}</td>
+            <td class="num">${itemSqft > 0 ? num(itemSqft, 2) : "N/A"}</td>
+            <td class="num">${itemSqft > 0 ? money(calcSqft) : "N/A"}</td>
+          `;
+          rows.appendChild(tr);
+        });
+
+      const src = data.source ? `Source: ${data.source}` : "";
+      const upd = data.updated ? `Updated: ${data.updated}` : "";
+      document.getElementById("meta").textContent = [src, upd].filter(Boolean).join(" | ");
+    }
+
+    function load() {
+      const shared = window.PRICES_DATA;
+      if (shared && Array.isArray(shared.substrates)) {
+        render(shared);
+        return;
+      }
+      render(FALLBACK_PRICE_DATA);
+      document.getElementById("meta").textContent =
+        "Shared price data was not found. Using fallback data.";
+    }
+
+    load();
+  </script>
+</body>
+</html>

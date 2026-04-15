@@ -1,0 +1,23 @@
+window.PRICES_DATA = {
+  source: "Harbor normalized pricing from v1 archive",
+  updated: "2026-02-18",
+  substrates: [
+    { key: "none", label: "None", price: 0.0, item_size: "", item_price: 0.0, item_sqft: 0.0, source: "system" },
+    { key: "alum_040", label: "040 Aluminum", price: 3.91, item_size: "4' x 10'", item_price: 156.54, item_sqft: 40.0, source: "harbor_v1" },
+    { key: "alum_080", label: "080 Aluminum", price: 6.57, item_size: "4' x 8'", item_price: 210.30, item_sqft: 32.0, source: "harbor_v1" },
+    { key: "acm_3mm", label: "3mm ACM", price: 1.85, item_size: "4' x 8'", item_price: 59.16, item_sqft: 32.0, source: "harbor_v1" },
+    { key: "coro_4mm", label: "Coroplast 4mm", price: 0.47, item_size: "4' x 8'", item_price: 15.09, item_sqft: 32.0, source: "harbor_v1" },
+    { key: "coro_10mm", label: "Coroplast 10mm", price: 1.21, item_size: "4' x 8'", item_price: 38.78, item_sqft: 32.0, source: "harbor_v1" },
+    { key: "pvc_6mm", label: "PVC 6mm", price: 2.06, item_size: "4' x 8'", item_price: 65.90, item_sqft: 32.0, source: "harbor_v1" },
+    { key: "acrylic_3_16", label: "3/16 Acrylic", price: 3.25, item_size: "4' x 8'", item_price: 103.94, item_sqft: 32.0, source: "harbor_v1" },
+    { key: "banner_13oz", label: "13oz Banner", price: 0.22, item_size: "54\" x 164'", item_price: 164.15, item_sqft: 738.0, source: "harbor_v1" },
+    { key: "cast_vinyl", label: "Cast Vinyl", price: 1.16, item_size: "24\" x 10 yd", item_price: 69.77, item_sqft: 60.0, source: "harbor_v1" },
+    { key: "calendar_vinyl", label: "Calendar Vinyl", price: 0.43, item_size: "24\" x 10 yd", item_price: 26.04, item_sqft: 60.0, source: "harbor_v1" }
+  ],
+  graphics: [
+    { key: "none", label: "None", price: 0.0, suggested_markup: 1.00, source: "system" },
+    { key: "print", label: "Print", price: 4.0, suggested_markup: 1.60, source: "harbor_v1" },
+    { key: "cast", label: "Cast", price: 1.16, suggested_markup: 1.85, source: "harbor_v1" },
+    { key: "calendar", label: "Calendar", price: 0.43, suggested_markup: 1.85, source: "harbor_v1" }
+  ]
+};

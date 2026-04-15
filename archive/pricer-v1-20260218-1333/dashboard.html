@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pricer Dashboard</title>
+  <style>
+    :root {
+      --bg: #f4f7f3;
+      --card: #ffffff;
+      --ink: #142018;
+      --muted: #5c6f63;
+      --accent: #0e8f5b;
+      --danger: #b42318;
+      --line: #dce5df;
+      --shadow: 0 10px 28px rgba(17, 37, 26, 0.1);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Bahnschrift", "Segoe UI Variable", "Trebuchet MS", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, #d7f3e4 0, transparent 34%),
+        radial-gradient(circle at 88% 0%, #fff0bf 0, transparent 28%),
+        linear-gradient(180deg, #f8fbf8 0%, var(--bg) 100%);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 40px; }
+    .hero {
+      background: linear-gradient(140deg, #083d2a 0%, #106b46 70%, #158f5f 100%);
+      color: #f7fff9; border-radius: 18px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 18px;
+    }
+    .hero h1 { margin: 0 0 6px; font-weight: 700; }
+    .hero p { margin: 0; color: #ddf9e9; }
+    .hero a { color: #ffffff; font-weight: 700; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; }
+    .tabs { display: flex; border-bottom: 1px solid var(--line); background: #f9fcfa; }
+    .tab-btn {
+      appearance: none; border: 0; background: transparent; padding: 14px 16px;
+      font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent;
+    }
+    .tab-btn.active { color: var(--ink); border-bottom-color: var(--accent); background: #fff; }
+    .panel { padding: 16px; display: none; }
+    .panel.active { display: block; }
+    .row { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 12px; }
+    .field label {
+      display: block; font-size: 12px; font-weight: 700; color: var(--muted);
+      margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .field input, .field select {
+      width: 100%; border: 1px solid #c8d7cd; border-radius: 10px; padding: 10px 12px; font: inherit;
+      background: #fff; color: var(--ink);
+    }
+    .btn {
+      appearance: none; border: 0; border-radius: 10px; padding: 11px 14px;
+      background: linear-gradient(120deg, var(--accent) 0%, #0ba06b 100%);
+      color: #fff; font-weight: 700; cursor: pointer;
+    }
+    .out {
+      margin-top: 10px; border: 1px solid var(--line); border-radius: 12px;
+      background: #fbfefc; padding: 12px; min-height: 56px; white-space: pre-wrap; line-height: 1.4;
+    }
+    .out.out-rich { white-space: normal; }
+    .result-head {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #e7eeea;
+    }
+    .result-title { font-size: 15px; font-weight: 700; }
+    .result-pill {
+      font-size: 12px; font-weight: 700; color: #0c6f4a;
+      background: #e9f8f1; border: 1px solid #bde8d2; border-radius: 999px; padding: 3px 8px;
+    }
+    .result-grid {
+      display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 10px;
+    }
+    .result-card {
+      border: 1px solid #e1ebe5; border-radius: 10px; padding: 10px; background: #ffffff;
+    }
+    .result-card h4 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase; color: #5b6d61; }
+    .result-row { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; margin-bottom: 4px; }
+    .result-row:last-child { margin-bottom: 0; }
+    .result-row strong { font-weight: 700; }
+    .result-total {
+      margin-top: 8px; padding: 10px; border-radius: 10px;
+      background: linear-gradient(120deg, #eaf8f1 0%, #f2fbf6 100%);
+      border: 1px solid #cde8d8;
+    }
+    .result-total .result-row { font-size: 14px; }
+    @media (min-width: 760px) {
+      .result-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    .warn { margin: 0 12px 12px; padding: 10px 12px; border-radius: 10px; background: #fff4ce; border: 1px solid #ffe49a; color: #664700; }
+    .err { color: var(--danger); font-weight: 700; }
+    .led-box {
+      border: 1px dashed #9bc8ad; border-radius: 12px; background: #f6fcf8; padding: 12px; margin-bottom: 12px;
+    }
+    .hidden { display: none; }
+    details.fold { border: 1px solid var(--line); border-radius: 12px; background: #fdfefd; margin-bottom: 12px; }
+    details.fold > summary {
+      cursor: pointer; list-style: none; padding: 12px 14px; font-weight: 700; color: var(--ink);
+      border-bottom: 1px solid transparent;
+    }
+    details.fold[open] > summary { border-bottom-color: #e5ece7; background: #f7fbf9; }
+    details.fold > summary::-webkit-details-marker { display: none; }
+    .fold-body { padding: 12px; }
+    @media (min-width: 760px) {
+      .row.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .row.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .row.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Pricing Dashboard</h1>
+      <p>Signs and Garments. <a href="/prices">Open Live Price Sheet</a></p>
+    </section>
+
+    <section class="card">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="sign">SIGN</button>
+        <button class="tab-btn" data-tab="garment">GARMENT</button>
+      </div>
+      <div class="panel active" style="padding-bottom:0;">
+        <div class="row two">
+          <div class="field">
+            <label for="pricing-profile">Pricing Profile</label>
+            <select id="pricing-profile"></select>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-sign" class="panel active">
+        <details class="fold" id="sign-wholesale-panel" open>
+          <summary>Wholesale Subout Pricing</summary>
+          <div class="fold-body">
+            <div class="row two">
+              <div class="field">
+                <label for="wholesale-item">Material / Service</label>
+                <select id="wholesale-item"></select>
+              </div>
+              <div class="field">
+                <label for="wholesale-qty">Quantity</label>
+                <input id="wholesale-qty" type="number" min="1" step="1" value="1">
+              </div>
+            </div>
+            <div id="wholesale-size-row" class="row two">
+              <div class="field">
+                <label for="wholesale-width">Width (in)</label>
+                <input id="wholesale-width" type="number" min="0.01" step="0.01" value="24">
+              </div>
+              <div class="field">
+                <label for="wholesale-height">Height (in)</label>
+                <input id="wholesale-height" type="number" min="0.01" step="0.01" value="18">
+              </div>
+            </div>
+            <div id="wholesale-linft-row" class="row two hidden">
+              <div class="field">
+                <label for="wholesale-linft">Linear Ft (each)</label>
+                <input id="wholesale-linft" type="number" min="0.01" step="0.01" value="8">
+              </div>
+            </div>
+            <button id="btn-wholesale" class="btn">Calculate Wholesale Subout</button>
+            <div id="out-wholesale" class="out"></div>
+          </div>
+        </details>
+
+        <details class="fold" id="sign-inhouse-panel">
+          <summary>In-House Pricing</summary>
+          <div class="fold-body">
+            <div class="row two">
+              <div class="field">
+                <label for="sign-material">Material</label>
+                <select id="sign-material"></select>
+              </div>
+              <div class="field">
+                <label for="sign-process-type">Process Type</label>
+                <select id="sign-process-type">
+                  <option value="PRINT">Print</option>
+                  <option value="PLOT">Vinyl</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <small>Vinyl options (Cast/Calendar) are mutually exclusive by design.</small>
+            </div>
+            <div class="row two">
+              <div class="field">
+                <label for="sign-process">Process Option</label>
+                <select id="sign-process"></select>
+              </div>
+            </div>
+            <div class="row three">
+              <div class="field">
+                <label for="sign-width">Width (in)</label>
+                <input id="sign-width" type="number" step="0.01" min="0.01" value="24">
+              </div>
+              <div class="field">
+                <label for="sign-height">Height (in)</label>
+                <input id="sign-height" type="number" step="0.01" min="0.01" value="18">
+              </div>
+              <div class="field">
+                <label for="sign-qty">Quantity</label>
+                <input id="sign-qty" type="number" min="1" step="1" value="1">
+              </div>
+            </div>
+            <div class="row three">
+              <div class="field">
+                <label for="sign-markup">Markup Multiplier</label>
+                <input id="sign-markup" type="number" step="0.01" min="1.00" value="2.00">
+              </div>
+              <div class="field">
+                <label for="sign-discount">Discount %</label>
+                <select id="sign-discount"></select>
+              </div>
+            </div>
+            <div class="row three">
+              <div class="field">
+                <label for="sign-labor-time">Labor Time (hours)</label>
+                <input id="sign-labor-time" type="number" step="0.5" min="0" value="0">
+              </div>
+              <div class="field">
+                <label for="sign-labor-rate">Labor Rate ($/hr)</label>
+                <input id="sign-labor-rate" type="number" step="1" min="0" value="65">
+              </div>
+              <div class="field">
+                <label for="sign-waste">Waste %</label>
+                <input id="sign-waste" type="number" step="0.1" min="0" value="10">
+              </div>
+            </div>
+
+            <div class="led-box">
+              <label><input id="sign-led-enabled" type="checkbox"> Add LEDs to this sign</label>
+              <div id="led-section" class="hidden">
+                <div class="row three">
+                  <div class="field">
+                    <label for="led-type">LED Type</label>
+                    <select id="led-type">
+                      <option value="mods">Modules</option>
+                      <option value="ribbon">Ribbon</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="led-color">Color Mode</label>
+                    <select id="led-color"></select>
+                  </div>
+                  <div class="field">
+                    <label for="led-ft">Linear Ft</label>
+                    <input id="led-ft" type="number" min="0.01" step="0.01" value="10">
+                  </div>
+                </div>
+                <div id="ribbon-extra" class="row two hidden">
+                  <div class="field">
+                    <label for="led-density">Ribbon Density</label>
+                    <select id="led-density"></select>
+                  </div>
+                  <div class="field">
+                    <label for="led-voltage">Ribbon Voltage</label>
+                    <select id="led-voltage"></select>
+                  </div>
+                </div>
+                <div id="controller-row" class="row two hidden">
+                  <div class="field">
+                    <label for="led-controller">Controller</label>
+                    <select id="led-controller"></select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button id="btn-sign" class="btn">Calculate Sign</button>
+            <div id="out-sign" class="out"></div>
+          </div>
+        </details>
+      </div>
+
+      <div id="panel-garment" class="panel">
+        <div class="row three">
+          <div class="field">
+            <label for="garment-type">Garment Type</label>
+            <select id="garment-type">
+              <option value="shirt">Shirt</option>
+              <option value="hoodie">Hoodie</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="garment-tier">Tier</label>
+            <select id="garment-tier"></select>
+          </div>
+          <div class="field">
+            <label for="garment-qty">Quantity</label>
+            <input id="garment-qty" type="number" min="1" step="1" value="12">
+          </div>
+        </div>
+        <div class="led-box">
+          <strong>Graphics</strong>
+          <div class="row three" style="margin-top:10px;">
+            <div class="field">
+              <label for="garment-front">Front</label>
+              <select id="garment-front"></select>
+            </div>
+            <div class="field">
+              <label for="garment-back">Back</label>
+              <select id="garment-back"></select>
+            </div>
+            <div class="field">
+              <label for="garment-colors">Colors</label>
+              <select id="garment-colors"></select>
+            </div>
+          </div>
+        </div>
+        <div class="row three">
+          <div class="field">
+            <label for="garment-markup">Markup Multiplier</label>
+            <input id="garment-markup" type="number" step="0.01" min="1.00" value="2.40">
+          </div>
+          <div class="field">
+            <label for="garment-discount">Discount %</label>
+            <select id="garment-discount"></select>
+          </div>
+        </div>
+        <div class="row three">
+          <div class="field">
+            <label for="garment-labor-time">Labor Time (hours)</label>
+            <input id="garment-labor-time" type="number" step="0.5" min="0" value="0">
+          </div>
+          <div class="field">
+            <label for="garment-labor-rate">Labor Rate ($/hr)</label>
+            <input id="garment-labor-rate" type="number" step="1" min="0" value="65">
+          </div>
+          <div class="field">
+            <label for="garment-waste">Waste %</label>
+            <input id="garment-waste" type="number" step="0.1" min="0" value="10">
+          </div>
+        </div>
+        <button id="btn-garment" class="btn">Calculate Garment</button>
+        <div id="out-garment" class="out"></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const state = { options: null };
+
+    function money(v) { return "$" + Number(v).toFixed(2); }
+    function parsePositiveFloat(value) {
+      const n = Number(value);
+      if (!Number.isFinite(n) || n <= 0) throw new Error("Enter a number greater than zero.");
+      return n;
+    }
+    function parsePositiveInt(value) {
+      const n = Number(value);
+      if (!Number.isInteger(n) || n <= 0) throw new Error("Enter a whole number greater than zero.");
+      return n;
+    }
+    function parseNonNegative(value) {
+      const n = Number(value);
+      if (!Number.isFinite(n) || n < 0) throw new Error("Enter a number zero or greater.");
+      return n;
+    }
+    function parseWholeDollar(value) {
+      const n = Number(value);
+      if (!Number.isInteger(n) || n < 0) throw new Error("Enter a whole dollar amount (0 or more).");
+      return n;
+    }
+    function fillSelect(select, entries) {
+      select.innerHTML = "";
+      entries.forEach((entry) => {
+        const opt = document.createElement("option");
+        opt.value = String(entry.value);
+        opt.textContent = entry.label;
+        select.appendChild(opt);
+      });
+    }
+    function fillMapSelect(select, map, formatter) {
+      select.innerHTML = "";
+      Object.entries(map).forEach(([key, item]) => {
+        const opt = document.createElement("option");
+        opt.value = key;
+        opt.textContent = formatter ? formatter(key, item) : `${item.label}`;
+        select.appendChild(opt);
+      });
+    }
+    function fillDiscountSelect(select, values, selected) {
+      select.innerHTML = "";
+      values.forEach((v) => {
+        const opt = document.createElement("option");
+        opt.value = String(v);
+        opt.textContent = `${v}%`;
+        if (Number(v) === Number(selected)) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+    function profileLabel(name) {
+      if (name === "conservative") return "Conservative";
+      if (name === "aggressive") return "Aggressive";
+      return "Standard";
+    }
+
+    function renderSignProcess() {
+      const source = document.getElementById("sign-process-type").value === "PRINT" ? state.options.print : state.options.plot;
+      fillMapSelect(document.getElementById("sign-process"), source, (k, v) => `${v.label} (${money(v.price)})`);
+    }
+
+    function renderGarmentTiers() {
+      const type = document.getElementById("garment-type").value;
+      const tiers = state.options.garment[type] || {};
+      fillMapSelect(document.getElementById("garment-tier"), tiers, (k, v) => `${v.label} (${money(v.price)})`);
+    }
+    function graphicsPriceByColor(item, color) {
+      const c = String(color || "1").toUpperCase();
+      if (c === "1") return Number(item.price_1 || 0);
+      if (c === "2") return Number(item.price_2 || 0);
+      if (c === "3") return Number(item.price_3 || 0);
+      return Number(item.price_dtf || 0);
+    }
+    function renderGarmentGraphics() {
+      const gg = state.options.garment_graphics || {};
+      const prevColor = document.getElementById("garment-colors").value || "1";
+      const prevFront = document.getElementById("garment-front").value;
+      const prevBack = document.getElementById("garment-back").value;
+      fillSelect(
+        document.getElementById("garment-colors"),
+        (gg.colors || ["1", "2", "3", "DTF"]).map((v) => ({ value: v, label: v }))
+      );
+      document.getElementById("garment-colors").value = prevColor;
+      const color = document.getElementById("garment-colors").value || "1";
+      fillMapSelect(
+        document.getElementById("garment-front"),
+        gg.front || {},
+        (k, v) => {
+          const clean = String(v.label || "").replace(/^front\\s+/i, "");
+          return `${clean} (${money(graphicsPriceByColor(v, color))})`;
+        }
+      );
+      fillMapSelect(
+        document.getElementById("garment-back"),
+        gg.back || {},
+        (k, v) => {
+          const clean = String(v.label || "").replace(/^back\\s+/i, "");
+          return `${clean} (${money(graphicsPriceByColor(v, color))})`;
+        }
+      );
+      if (prevFront) document.getElementById("garment-front").value = prevFront;
+      if (prevBack) document.getElementById("garment-back").value = prevBack;
+    }
+    function renderWholesaleSuboutOptions() {
+      fillMapSelect(
+        document.getElementById("wholesale-item"),
+        state.options.wholesale_subout || {},
+        (k, v) => `[${v.group}] ${v.label} (${money(v.price)}/${String(v.unit).toUpperCase()})`
+      );
+      renderWholesaleInputs();
+    }
+    function renderWholesaleInputs() {
+      const key = document.getElementById("wholesale-item").value;
+      const item = (state.options.wholesale_subout || {})[key] || {};
+      const unit = String(item.unit || "sqft").toLowerCase();
+      document.getElementById("wholesale-size-row").classList.toggle("hidden", unit !== "sqft");
+      document.getElementById("wholesale-linft-row").classList.toggle("hidden", unit !== "linft");
+    }
+    function applyProfileToMarkup(profileName) {
+      const profiles = (state.options.pricing_policy && state.options.pricing_policy.profiles) || {};
+      const profile = profiles[profileName] || {};
+      document.getElementById("sign-markup").value = Number(profile.sign_markup_multiplier || 2.0).toFixed(2);
+      document.getElementById("garment-markup").value = Number(profile.garment_markup_multiplier || 2.4).toFixed(2);
+    }
+
+    function renderLedFields() {
+      const ledEnabled = document.getElementById("sign-led-enabled").checked;
+      const ledSection = document.getElementById("led-section");
+      ledSection.classList.toggle("hidden", !ledEnabled);
+      if (!ledEnabled) return;
+
+      const ledType = document.getElementById("led-type").value;
+      const ledUi = state.options.led_ui;
+      const ribbonExtra = document.getElementById("ribbon-extra");
+      ribbonExtra.classList.toggle("hidden", ledType !== "ribbon");
+
+      if (ledType === "mods") {
+        fillSelect(
+          document.getElementById("led-color"),
+          ledUi.mods_colors.map((x) => ({ value: x, label: x.toUpperCase() }))
+        );
+      } else {
+        fillSelect(
+          document.getElementById("led-color"),
+          ledUi.ribbon_colors.map((x) => ({ value: x, label: x.toUpperCase() }))
+        );
+        fillSelect(
+          document.getElementById("led-density"),
+          ledUi.ribbon_densities.map((x) => ({ value: x, label: x.charAt(0).toUpperCase() + x.slice(1) }))
+        );
+        fillSelect(
+          document.getElementById("led-voltage"),
+          ledUi.ribbon_voltages.map((x) => ({ value: x, label: `${x}V` }))
+        );
+      }
+      renderControllerVisibility();
+    }
+
+    function renderControllerVisibility() {
+      const color = document.getElementById("led-color").value.toLowerCase();
+      const needsController = color === "rgb" || color === "argb";
+      const row = document.getElementById("controller-row");
+      row.classList.toggle("hidden", !needsController);
+      if (!needsController) return;
+      fillMapSelect(
+        document.getElementById("led-controller"),
+        state.options.led_ui.controllers,
+        (k, v) => `${v.label} (${money(v.price)})`
+      );
+    }
+
+    async function loadOptions() {
+      const res = await fetch("/api/options");
+      const data = await res.json();
+      state.options = data;
+      fillMapSelect(document.getElementById("sign-material"), data.material, (k, v) => `${v.label} (${money(v.price)})`);
+      renderSignProcess();
+      renderWholesaleSuboutOptions();
+      renderGarmentTiers();
+      renderGarmentGraphics();
+      renderLedFields();
+
+      const profileName = (data.pricing_policy && data.pricing_policy.active_profile) || "standard";
+      const profiles = (data.pricing_policy && data.pricing_policy.profiles) || {};
+      const discountOptions = (data.pricing_policy && data.pricing_policy.discount_options_percent) || [0, 5, 10, 15];
+      const defaultDiscount = (data.pricing_policy && data.pricing_policy.default_discount_percent) || 0;
+      const cm = (data.pricing_policy && data.pricing_policy.cost_model) || {};
+      const signCm = cm.sign || {};
+      const garmentCm = cm.garment || {};
+      fillSelect(
+        document.getElementById("pricing-profile"),
+        Object.keys(profiles).map((name) => ({ value: name, label: profileLabel(name) }))
+      );
+      document.getElementById("pricing-profile").value = profileName;
+      applyProfileToMarkup(profileName);
+      fillDiscountSelect(document.getElementById("sign-discount"), discountOptions, defaultDiscount);
+      fillDiscountSelect(document.getElementById("garment-discount"), discountOptions, defaultDiscount);
+      document.getElementById("sign-labor-rate").value = Number(signCm.labor_rate_per_hour || 65).toFixed(0);
+      document.getElementById("garment-labor-rate").value = Number(garmentCm.labor_rate_per_hour || 65).toFixed(0);
+      document.getElementById("sign-waste").value = Number(signCm.default_waste_percent || 10).toFixed(1);
+      document.getElementById("garment-waste").value = Number(garmentCm.default_waste_percent || 10).toFixed(1);
+    }
+
+    async function quoteSign() {
+      const out = document.getElementById("out-sign");
+      try {
+        const ledEnabled = document.getElementById("sign-led-enabled").checked;
+        const ledType = document.getElementById("led-type").value;
+        const ledPayload = {
+          enabled: ledEnabled,
+          led_type: ledType,
+          color_mode: document.getElementById("led-color").value,
+          linear_ft: parsePositiveFloat(document.getElementById("led-ft").value),
+          density: ledType === "ribbon" ? document.getElementById("led-density").value : "",
+          voltage: ledType === "ribbon" ? Number(document.getElementById("led-voltage").value) : 0,
+          controller_key: document.getElementById("controller-row").classList.contains("hidden")
+            ? ""
+            : document.getElementById("led-controller").value
+        };
+        const body = {
+          pricing_profile: document.getElementById("pricing-profile").value,
+          material_key: document.getElementById("sign-material").value,
+          process_type: document.getElementById("sign-process-type").value,
+          process_key: document.getElementById("sign-process").value,
+          width_in: parsePositiveFloat(document.getElementById("sign-width").value),
+          height_in: parsePositiveFloat(document.getElementById("sign-height").value),
+          quantity: parsePositiveInt(document.getElementById("sign-qty").value),
+          markup_multiplier: parsePositiveFloat(document.getElementById("sign-markup").value),
+          discount_percent: Number(document.getElementById("sign-discount").value),
+          labor_hours: parseNonNegative(document.getElementById("sign-labor-time").value),
+          labor_minutes: 0,
+          labor_rate_per_hour: parseWholeDollar(document.getElementById("sign-labor-rate").value),
+          waste_percent: parseNonNegative(document.getElementById("sign-waste").value),
+          led: ledPayload
+        };
+        const res = await fetch("/api/quote/sign", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Sign quote failed.");
+        out.classList.add("out-rich");
+        const ledBlock = data.led_included && data.led ? `
+  <div class="result-card">
+    <h4>LED Add-on</h4>
+    <div class="result-row"><span>Type</span><strong>${data.led.led_type}</strong></div>
+    <div class="result-row"><span>Spec</span><strong>${data.led.led_label}</strong></div>
+    <div class="result-row"><span>Color</span><strong>${String(data.led.color_mode).toUpperCase()}</strong></div>
+    <div class="result-row"><span>Linear Ft</span><strong>${Number(data.led.linear_ft).toFixed(2)}</strong></div>
+    <div class="result-row"><span>LED Cost Add-on</span><strong>${money(data.led_total)}</strong></div>
+    <div class="result-row"><span>Required Watts</span><strong>${Number(data.led.required_watts).toFixed(1)}W</strong></div>
+    <div class="result-row"><span>Suggested PSU</span><strong>${Number(data.led.suggested_power_supply_watts).toFixed(0)}W</strong></div>
+    <div class="result-row"><span>Controller</span><strong>${data.led.controller_label} (${money(data.led.controller_price)})</strong></div>
+  </div>` : "";
+        out.innerHTML = `
+<div class="result-head">
+  <div class="result-title">${data.material_label} • ${data.process_label}</div>
+  <div class="result-pill">${data.pricing_profile}</div>
+</div>
+<div class="result-grid">
+  <div class="result-card">
+    <h4>Sign Details</h4>
+    <div class="result-row"><span>Material</span><strong>${data.material_label} (${money(data.material_price)}/sqft)</strong></div>
+    <div class="result-row"><span>Process</span><strong>${data.process_type} - ${data.process_label} (${money(data.process_price)}/sqft)</strong></div>
+    <div class="result-row"><span>Area</span><strong>${Number(data.sqft).toFixed(4)} sqft</strong></div>
+    <div class="result-row"><span>Quantity</span><strong>${Number(data.quantity).toFixed(0)}</strong></div>
+    <div class="result-row"><span>Markup</span><strong>${Number(data.markup_multiplier).toFixed(2)}x (${Number(data.markup_percent).toFixed(1)}%)</strong></div>
+  </div>
+  <div class="result-card">
+    <h4>Cost Inputs</h4>
+    <div class="result-row"><span>Hard Costs</span><strong>${money(data.cost_breakdown.hard_costs)}</strong></div>
+    <div class="result-row"><span>Variable Labor</span><strong>${money(data.cost_breakdown.variable_labor)}</strong></div>
+    <div class="result-row"><span>Labor Adj</span><strong>${Number(data.cost_breakdown.manual_labor_hours_raw).toFixed(2)}h → ${Number(data.cost_breakdown.manual_labor_hours_rounded).toFixed(1)}h @ ${money(data.cost_breakdown.labor_rate_per_hour)}/hr</strong></div>
+    <div class="result-row"><span>Fixed Adders</span><strong>${money(data.cost_breakdown.fixed_adders)}</strong></div>
+    <div class="result-row"><span>Waste (${Number(data.cost_breakdown.waste_percent).toFixed(1)}%)</span><strong>${money(data.cost_breakdown.waste_adjustment)}</strong></div>
+    <div class="result-row"><span>My Cost</span><strong>${money(data.cost_total)}</strong></div>
+  </div>
+  ${ledBlock}
+</div>
+<div class="result-total">
+  <div class="result-row"><span>Before Discount</span><strong>${money(data.customer_price_before_discount)}</strong></div>
+  <div class="result-row"><span>Discount</span><strong>${Number(data.discount_percent).toFixed(1)}% (${money(data.discount_amount)})</strong></div>
+  <div class="result-row"><span>Min Charge</span><strong>${money(data.minimum_charge)} (Applied ${money(data.minimum_charge_applied)})</strong></div>
+  <div class="result-row"><span>Customer Price</span><strong>${money(data.customer_price)}</strong></div>
+  <div class="result-row"><span>Profit</span><strong>${money(data.profit)}</strong></div>
+</div>`;
+      } catch (err) {
+        out.classList.remove("out-rich");
+        out.innerHTML = `<span class="err">${err.message}</span>`;
+      }
+    }
+
+    async function quoteGarment() {
+      const out = document.getElementById("out-garment");
+      try {
+        const body = {
+          pricing_profile: document.getElementById("pricing-profile").value,
+          product_type: document.getElementById("garment-type").value,
+          tier: document.getElementById("garment-tier").value,
+          quantity: parsePositiveInt(document.getElementById("garment-qty").value),
+          graphics: {
+            enabled: true,
+            front_key: document.getElementById("garment-front").value,
+            back_key: document.getElementById("garment-back").value,
+            colors: document.getElementById("garment-colors").value
+          },
+          markup_multiplier: parsePositiveFloat(document.getElementById("garment-markup").value),
+          discount_percent: Number(document.getElementById("garment-discount").value),
+          labor_hours: parseNonNegative(document.getElementById("garment-labor-time").value),
+          labor_minutes: 0,
+          labor_rate_per_hour: parseWholeDollar(document.getElementById("garment-labor-rate").value),
+          waste_percent: parseNonNegative(document.getElementById("garment-waste").value)
+        };
+        const res = await fetch("/api/quote/garment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Garment quote failed.");
+        out.classList.add("out-rich");
+        out.innerHTML =
+`<div class="result-head">
+  <div class="result-title">${String(data.product_type).toUpperCase()} • ${String(data.tier).toUpperCase()} • ${data.label}</div>
+  <div class="result-pill">${data.pricing_profile}</div>
+</div>
+<div class="result-grid">
+  <div class="result-card">
+    <h4>Cost Inputs</h4>
+    <div class="result-row"><span>Base Cost</span><strong>${money(data.base_cost_total)}</strong></div>
+    <div class="result-row"><span>Graphics Cost</span><strong>${money(data.graphics_cost_total)}</strong></div>
+    <div class="result-row"><span>Hard Costs</span><strong>${money(data.cost_breakdown.hard_costs)}</strong></div>
+    <div class="result-row"><span>Variable Labor</span><strong>${money(data.cost_breakdown.variable_labor)}</strong></div>
+    <div class="result-row"><span>Labor Adj</span><strong>${Number(data.cost_breakdown.manual_labor_hours_raw).toFixed(2)}h → ${Number(data.cost_breakdown.manual_labor_hours_rounded).toFixed(1)}h @ ${money(data.cost_breakdown.labor_rate_per_hour)}/hr</strong></div>
+    <div class="result-row"><span>Fixed Adders</span><strong>${money(data.cost_breakdown.fixed_adders)}</strong></div>
+    <div class="result-row"><span>Waste (${Number(data.cost_breakdown.waste_percent).toFixed(1)}%)</span><strong>${money(data.cost_breakdown.waste_adjustment)}</strong></div>
+    <div class="result-row"><span>My Cost</span><strong>${money(data.cost_total)}</strong></div>
+  </div>
+  <div class="result-card">
+    <h4>Graphics</h4>
+    <div class="result-row"><span>Front</span><strong>${data.graphics.front_label || data.graphics.front_key}</strong></div>
+    <div class="result-row"><span>Back</span><strong>${data.graphics.back_label || data.graphics.back_key}</strong></div>
+    <div class="result-row"><span>Colors</span><strong>${data.graphics.colors}</strong></div>
+    <div class="result-row"><span>Markup</span><strong>${Number(data.markup_multiplier).toFixed(2)}x (${Number(data.markup_percent).toFixed(1)}%)</strong></div>
+    <div class="result-row"><span>Before Discount</span><strong>${money(data.customer_price_before_discount)}</strong></div>
+    <div class="result-row"><span>Discount</span><strong>${Number(data.discount_percent).toFixed(1)}% (${money(data.discount_amount)})</strong></div>
+    <div class="result-row"><span>Min Charge</span><strong>${money(data.minimum_charge)} (Applied ${money(data.minimum_charge_applied)})</strong></div>
+    <div class="result-row"><span>Customer Price / Shirt</span><strong>${money(data.customer_price_each)}</strong></div>
+  </div>
+</div>
+<div class="result-total">
+  <div class="result-row"><span>Customer Price</span><strong>${money(data.customer_price)}</strong></div>
+  <div class="result-row"><span>Profit</span><strong>${money(data.profit)}</strong></div>
+</div>`;
+      } catch (err) {
+        out.classList.remove("out-rich");
+        out.innerHTML = `<span class="err">${err.message}</span>`;
+      }
+    }
+
+    async function quoteWholesale() {
+      const out = document.getElementById("out-wholesale");
+      try {
+        const key = document.getElementById("wholesale-item").value;
+        const item = (state.options.wholesale_subout || {})[key];
+        if (!item) throw new Error("Select a wholesale item.");
+        const unit = String(item.unit || "").toLowerCase();
+        const body = {
+          item_key: key,
+          quantity: parsePositiveInt(document.getElementById("wholesale-qty").value)
+        };
+        if (unit === "sqft") {
+          body.width_in = parsePositiveFloat(document.getElementById("wholesale-width").value);
+          body.height_in = parsePositiveFloat(document.getElementById("wholesale-height").value);
+        } else if (unit === "linft") {
+          body.linear_ft = parsePositiveFloat(document.getElementById("wholesale-linft").value);
+        }
+        const res = await fetch("/api/quote/wholesale-subout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Wholesale subout quote failed.");
+        out.classList.add("out-rich");
+        out.innerHTML = `
+<div class="result-head">
+  <div class="result-title">${data.item_label}</div>
+  <div class="result-pill">${data.group}</div>
+</div>
+<div class="result-grid">
+  <div class="result-card">
+    <h4>Input</h4>
+    <div class="result-row"><span>Unit</span><strong>${String(data.unit).toUpperCase()}</strong></div>
+    <div class="result-row"><span>Rate</span><strong>${money(data.price)}</strong></div>
+    <div class="result-row"><span>Quantity</span><strong>${Number(data.quantity).toFixed(0)}</strong></div>
+    <div class="result-row"><span>SqFt (each)</span><strong>${Number(data.sqft_each).toFixed(4)}</strong></div>
+    <div class="result-row"><span>Linear Ft (each)</span><strong>${Number(data.linear_ft_each).toFixed(2)}</strong></div>
+    <div class="result-row"><span>Billable Units</span><strong>${Number(data.billable_units_total).toFixed(4)}</strong></div>
+  </div>
+</div>
+<div class="result-total">
+  <div class="result-row"><span>Wholesale Cost</span><strong>${money(data.total)}</strong></div>
+</div>`;
+      } catch (err) {
+        out.classList.remove("out-rich");
+        out.innerHTML = `<span class="err">${err.message}</span>`;
+      }
+    }
+
+    function setupTabs() {
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          const tab = btn.dataset.tab;
+          document.getElementById("panel-sign").classList.toggle("active", tab === "sign");
+          document.getElementById("panel-garment").classList.toggle("active", tab === "garment");
+        });
+      });
+    }
+
+    document.getElementById("sign-process-type").addEventListener("change", renderSignProcess);
+    document.getElementById("pricing-profile").addEventListener("change", (e) => applyProfileToMarkup(e.target.value));
+    document.getElementById("wholesale-item").addEventListener("change", renderWholesaleInputs);
+    document.getElementById("garment-type").addEventListener("change", renderGarmentTiers);
+    document.getElementById("garment-colors").addEventListener("change", renderGarmentGraphics);
+    document.getElementById("sign-led-enabled").addEventListener("change", renderLedFields);
+    document.getElementById("led-type").addEventListener("change", renderLedFields);
+    document.getElementById("led-color").addEventListener("change", renderControllerVisibility);
+    document.getElementById("btn-sign").addEventListener("click", quoteSign);
+    document.getElementById("btn-wholesale").addEventListener("click", quoteWholesale);
+    document.getElementById("btn-garment").addEventListener("click", quoteGarment);
+
+    setupTabs();
+    loadOptions().catch((err) => {
+      console.error("Could not load options:", err);
+    });
+  </script>
+</body>
+</html>

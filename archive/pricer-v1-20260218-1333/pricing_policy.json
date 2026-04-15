@@ -1,0 +1,45 @@
+{
+  "profiles": {
+    "conservative": {
+      "sign_markup_multiplier": 1.7,
+      "led_markup_multiplier": 1.5,
+      "garment_markup_multiplier": 2.0
+    },
+    "standard": {
+      "sign_markup_multiplier": 2.0,
+      "led_markup_multiplier": 1.8,
+      "garment_markup_multiplier": 2.4
+    },
+    "aggressive": {
+      "sign_markup_multiplier": 2.4,
+      "led_markup_multiplier": 2.2,
+      "garment_markup_multiplier": 3.0
+    }
+  },
+  "active_profile": "standard",
+  "default_discount_percent": 0.0,
+  "discount_options_percent": [0, 5, 10, 15],
+  "minimum_charge": 35.0,
+  "cost_model": {
+    "sign": {
+      "labor_rate_per_hour": 65.0,
+      "default_waste_percent": 10.0,
+      "labor_minutes_per_sqft_print": 0.0,
+      "labor_minutes_per_sqft_plot": 0.0,
+      "led_labor_minutes_per_ft": 0.0,
+      "setup_fee": 0.0,
+      "proof_fee": 0.0,
+      "waste_percent_material": 0.0,
+      "waste_percent_process": 0.0,
+      "waste_percent_led": 0.0
+    },
+    "garment": {
+      "labor_rate_per_hour": 65.0,
+      "default_waste_percent": 10.0,
+      "labor_minutes_per_item": 0.0,
+      "setup_fee": 0.0,
+      "proof_fee": 0.0,
+      "waste_percent_hard_cost": 0.0
+    }
+  }
+}

@@ -1,0 +1,437 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign Quote</title>
+  <style>
+    :root {
+      --bg: #f2f6f4;
+      --card: #ffffff;
+      --ink: #17251d;
+      --muted: #5d7266;
+      --line: #d9e4dd;
+      --accent: #0d8a5f;
+      --shadow: 0 14px 34px rgba(18, 39, 28, 0.10);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Bahnschrift", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 7% 3%, #d8efe2 0, transparent 35%),
+        radial-gradient(circle at 88% 0%, #fff2cb 0, transparent 26%),
+        linear-gradient(180deg, #f9fcfa 0%, var(--bg) 100%);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 20px 16px 34px; }
+    .hero {
+      background: linear-gradient(140deg, #084430 0%, #0c734e 72%, #149767 100%);
+      border-radius: 18px;
+      color: #f2fff8;
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+    .hero h1 { margin: 0 0 4px; font-size: 28px; }
+    .hero p { margin: 0; color: #ddf8ea; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .row { display: grid; gap: 10px; margin-bottom: 10px; }
+    .row.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .row.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .row.four { grid-template-columns: 1.4fr 1.1fr 0.9fr 1fr; }
+    .field label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .35px;
+      margin-bottom: 5px;
+    }
+    .field input, .field select {
+      width: 100%;
+      border: 1px solid #cad9d0;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font: inherit;
+      color: var(--ink);
+      background: #fff;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      width: 22px;
+      height: 28px;
+      opacity: 1;
+      margin: 0;
+    }
+    .btn {
+      appearance: none;
+      border: 0;
+      border-radius: 10px;
+      background: linear-gradient(120deg, var(--accent) 0%, #09a26c 100%);
+      color: #fff;
+      font-weight: 700;
+      padding: 11px 14px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 12px;
+      border: 1px solid #cae5d7;
+      border-radius: 14px;
+      background: linear-gradient(160deg, #f8fefb 0%, #eef9f3 100%);
+      padding: 12px 12px 10px;
+      box-shadow: 0 8px 22px rgba(18, 39, 28, 0.08);
+    }
+    .result-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #d6ebe0;
+    }
+    .result-title {
+      margin: 0;
+      font-size: 13px;
+      letter-spacing: 0.35px;
+      text-transform: uppercase;
+      color: #2f5f4a;
+    }
+    .result-badge {
+      font-size: 12px;
+      font-weight: 700;
+      color: #0f6c49;
+      background: #e9f8f1;
+      border: 1px solid #bde8d2;
+      border-radius: 999px;
+      padding: 3px 8px;
+    }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid #edf3ef;
+    }
+    .result-row:last-child { border-bottom: 0; }
+    .result-row strong { font-size: 17px; }
+    .result-row.total {
+      margin-top: 6px;
+      padding-top: 10px;
+      border-top: 1px solid #cfe6da;
+      border-bottom: 0;
+    }
+    .result-row.total strong { color: #0d7d55; font-size: 20px; }
+    .graphics-line { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; }
+    .graphics-inline { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
+    .hidden { display: none; }
+    .indent { margin-left: 16px; padding-left: 10px; border-left: 3px solid #d5e8de; }
+    @media (max-width: 900px) {
+      .row.two, .row.three, .row.four { grid-template-columns: 1fr; }
+      .indent { margin-left: 0; padding-left: 0; border-left: 0; }
+      .graphics-line, .graphics-inline { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Sign Quote</h1>
+      <p>Simple quote: size, square feet, substrate, graphics. <a href="price_sheet.html" style="color:#fff;font-weight:700;">Open Price Sheet</a></p>
+    </section>
+
+    <section class="card">
+      <div class="row four">
+        <div class="field">
+          <label>Substrate</label>
+          <select id="material"></select>
+        </div>
+        <div class="field">
+          <label>Substrate Size (W x H in)</label>
+          <div class="row two" style="margin:0;">
+            <input id="width" type="number" min="1" step="0.25" value="24">
+            <input id="height" type="number" min="1" step="0.25" value="18">
+          </div>
+        </div>
+        <div class="field">
+          <label>Substrate Sq Ft</label>
+          <input id="sqft" type="text" value="3.00" readonly>
+        </div>
+      </div>
+
+      <div class="row">
+        <label style="display:flex; align-items:center; gap:8px; color:var(--muted); font-weight:700;">
+          <input id="material-2-enabled" type="checkbox">
+          Add second substrate
+        </label>
+      </div>
+
+      <div id="material-2-options" class="row three hidden">
+        <div class="field">
+          <label>Second Substrate</label>
+          <select id="material-2"></select>
+        </div>
+        <div class="field">
+          <label>Second Size (W x H in)</label>
+          <div class="row two" style="margin:0;">
+            <input id="material-2-width" type="number" min="1" step="0.25" value="24">
+            <input id="material-2-height" type="number" min="1" step="0.25" value="18">
+          </div>
+        </div>
+        <div class="field">
+          <label>Second Sq Ft</label>
+          <input id="material-2-sqft" type="text" value="3.00" readonly>
+        </div>
+      </div>
+
+      <div id="material-3-toggle-row" class="row hidden">
+        <label style="display:flex; align-items:center; gap:8px; color:var(--muted); font-weight:700;">
+          <input id="material-3-enabled" type="checkbox">
+          Add another substrate
+        </label>
+      </div>
+
+      <div id="material-3-options" class="row three hidden">
+        <div class="field">
+          <label>Third Substrate</label>
+          <select id="material-3"></select>
+        </div>
+        <div class="field">
+          <label>Third Size (W x H in)</label>
+          <div class="row two" style="margin:0;">
+            <input id="material-3-width" type="number" min="1" step="0.25" value="24">
+            <input id="material-3-height" type="number" min="1" step="0.25" value="18">
+          </div>
+        </div>
+        <div class="field">
+          <label>Third Sq Ft</label>
+          <input id="material-3-sqft" type="text" value="3.00" readonly>
+        </div>
+      </div>
+
+      <div class="indent">
+        <div class="row">
+          <div class="field">
+            <label>Graphics</label>
+            <div class="graphics-line">
+              <select id="process" style="width:180px; min-width:180px;"></select>
+              <label style="display:flex; align-items:center; gap:8px; color:var(--muted); font-weight:700; text-transform:none; letter-spacing:0; margin:0;">
+              <input id="process-different" type="checkbox">
+              Different size
+              </label>
+              <div id="graphics-size-inline" class="graphics-inline hidden">
+                <span style="color:var(--muted); font-size:11px; font-weight:700;">W</span>
+                <input id="process-width" type="number" min="1" step="0.25" value="24" style="width:66px;">
+                <span style="color:var(--muted); font-size:11px; font-weight:700;">H</span>
+                <input id="process-height" type="number" min="1" step="0.25" value="18" style="width:66px;">
+                <span style="color:var(--muted); font-size:11px; font-weight:700;">SqFt</span>
+                <input id="process-sqft" type="text" value="3.00" readonly style="width:64px;">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="extra-colors-row" class="row hidden">
+          <label style="display:flex; align-items:center; gap:8px; color:var(--muted); font-weight:700;">
+            <input id="extra-colors-enabled" type="checkbox">
+            Additional colors
+          </label>
+        </div>
+      </div>
+
+      <div class="row">
+        <label style="display:flex; align-items:center; gap:8px; color:var(--muted); font-weight:700;">
+          <input id="install-enabled" type="checkbox">
+          Include install
+        </label>
+      </div>
+
+      <div id="install-options" class="row two hidden">
+        <div class="field">
+          <label>Install Option (Placeholder)</label>
+          <select id="install-type">
+            <option value="">Select install type</option>
+            <option value="onsite">Onsite</option>
+            <option value="shop">In-shop prep</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Install Notes (Placeholder)</label>
+          <input id="install-notes" type="text" placeholder="Ladder, wall type, access, etc.">
+        </div>
+      </div>
+
+      <div class="result" id="result">
+        <div class="result-head">
+          <h3 class="result-title">Live Cost</h3>
+          <span class="result-badge">Auto</span>
+        </div>
+        <div class="result-row"><span>Substrate Cost</span><strong id="material-cost">$24.00</strong></div>
+        <div class="result-row"><span>Graphics Cost</span><strong id="process-cost">$12.00</strong></div>
+        <div class="result-row total"><span>Total Cost</span><strong id="quote-total">$36.00</strong></div>
+      </div>
+    </section>
+  </div>
+
+  <script src="prices_data.js"></script>
+  <script>
+    const DEFAULT_PRICE_DATA = {
+      substrates: [
+        { key: "none", label: "None", price: 0.0 },
+        { key: "alum_040", label: "040 Aluminum", price: 3.91 },
+        { key: "alum_080", label: "080 Aluminum", price: 6.57 },
+        { key: "acm_3mm", label: "3mm ACM", price: 1.85 },
+        { key: "coro_4mm", label: "Coroplast 4mm", price: 0.47 },
+        { key: "coro_10mm", label: "Coroplast 10mm", price: 1.21 },
+        { key: "pvc_6mm", label: "PVC 6mm", price: 2.06 }
+      ],
+      graphics: [
+        { key: "none", label: "None", price: 0.0 },
+        { key: "print", label: "Print", price: 4.0 },
+        { key: "cast", label: "Cast", price: 1.16 },
+        { key: "calendar", label: "Calendar", price: 0.43 }
+      ]
+    };
+
+    function money(v) { return "$" + Number(v).toFixed(2); }
+    function fillPricingSelect(selectId, entries) {
+      const select = document.getElementById(selectId);
+      select.innerHTML = "";
+      entries.forEach((entry) => {
+        const opt = document.createElement("option");
+        opt.value = String(entry.price ?? 0);
+        opt.dataset.key = String(entry.key || "");
+        opt.textContent = `${entry.label} (${money(entry.price)}/sqft)`;
+        select.appendChild(opt);
+      });
+    }
+    function updateExtraColorsVisibility() {
+      const processSelect = document.getElementById("process");
+      const selected = processSelect.options[processSelect.selectedIndex];
+      const key = (selected && selected.dataset && selected.dataset.key) ? selected.dataset.key.toLowerCase() : "";
+      const isVinyl = key === "cast" || key === "calendar" || key === "cast_vinyl" || key === "calendar_vinyl";
+      document.getElementById("extra-colors-row").classList.toggle("hidden", !isVinyl);
+      if (!isVinyl) {
+        document.getElementById("extra-colors-enabled").checked = false;
+      }
+    }
+    function applyPriceData(data) {
+      const substrateOptions = (data.substrates || []).filter((entry) => {
+        const key = String(entry.key || "").toLowerCase();
+        return key !== "cast_vinyl" && key !== "calendar_vinyl";
+      });
+      fillPricingSelect("material", substrateOptions);
+      fillPricingSelect("material-2", substrateOptions);
+      fillPricingSelect("material-3", substrateOptions);
+      fillPricingSelect("process", data.graphics || []);
+      updateExtraColorsVisibility();
+    }
+    function loadPriceData() {
+      const shared = window.PRICES_DATA;
+      if (shared && Array.isArray(shared.substrates) && Array.isArray(shared.graphics)) {
+        applyPriceData(shared);
+      } else {
+        applyPriceData(DEFAULT_PRICE_DATA);
+      }
+      quote();
+    }
+
+    function computeSqft() {
+      const w = Math.max(0, Number(document.getElementById("width").value || 0));
+      const h = Math.max(0, Number(document.getElementById("height").value || 0));
+      const materialSqft = (w * h) / 144.0;
+      document.getElementById("sqft").value = materialSqft.toFixed(2);
+
+      const processDifferent = document.getElementById("process-different").checked;
+      document.getElementById("graphics-size-inline").classList.toggle("hidden", !processDifferent);
+      const processWidthInput = document.getElementById("process-width");
+      const processHeightInput = document.getElementById("process-height");
+      processWidthInput.disabled = !processDifferent;
+      processHeightInput.disabled = !processDifferent;
+      if (!processDifferent) {
+        processWidthInput.value = String(w || 0);
+        processHeightInput.value = String(h || 0);
+      }
+
+      const pw = Math.max(0, Number(processWidthInput.value || 0));
+      const ph = Math.max(0, Number(processHeightInput.value || 0));
+      const processSqft = (pw * ph) / 144.0;
+      document.getElementById("process-sqft").value = processSqft.toFixed(2);
+
+      const secondEnabled = document.getElementById("material-2-enabled").checked;
+      const thirdEnabled = document.getElementById("material-3-enabled").checked;
+      document.getElementById("material-2-options").classList.toggle("hidden", !secondEnabled);
+      document.getElementById("material-3-toggle-row").classList.toggle("hidden", !secondEnabled);
+      if (!secondEnabled) {
+        document.getElementById("material-3-enabled").checked = false;
+      }
+      document.getElementById("material-3-options").classList.toggle("hidden", !secondEnabled || !thirdEnabled);
+
+      const m2w = Math.max(0, Number(document.getElementById("material-2-width").value || 0));
+      const m2h = Math.max(0, Number(document.getElementById("material-2-height").value || 0));
+      const material2Sqft = (m2w * m2h) / 144.0;
+      document.getElementById("material-2-sqft").value = material2Sqft.toFixed(2);
+
+      const m3w = Math.max(0, Number(document.getElementById("material-3-width").value || 0));
+      const m3h = Math.max(0, Number(document.getElementById("material-3-height").value || 0));
+      const material3Sqft = (m3w * m3h) / 144.0;
+      document.getElementById("material-3-sqft").value = material3Sqft.toFixed(2);
+
+      return { materialSqft, processSqft, material2Sqft, material3Sqft, secondEnabled, thirdEnabled };
+    }
+
+    function quote() {
+      const areas = computeSqft();
+      const material1 = Number(document.getElementById("material").value || 0);
+      const material2 = Number(document.getElementById("material-2").value || 0);
+      const material3 = Number(document.getElementById("material-3").value || 0);
+      const process = Number(document.getElementById("process").value || 0);
+      let materialCost = material1 * areas.materialSqft;
+      if (areas.secondEnabled) {
+        materialCost += material2 * areas.material2Sqft;
+      }
+      if (areas.secondEnabled && areas.thirdEnabled) {
+        materialCost += material3 * areas.material3Sqft;
+      }
+      const processCost = process * areas.processSqft;
+      const total = materialCost + processCost;
+
+      document.getElementById("material-cost").textContent = money(materialCost);
+      document.getElementById("process-cost").textContent = money(processCost);
+      document.getElementById("quote-total").textContent = money(total);
+    }
+
+    ["width", "height"].forEach((id) => {
+      document.getElementById(id).addEventListener("input", quote);
+    });
+    ["material-2-width", "material-2-height", "material-3-width", "material-3-height"].forEach((id) => {
+      document.getElementById(id).addEventListener("input", quote);
+    });
+    ["process-width", "process-height"].forEach((id) => {
+      document.getElementById(id).addEventListener("input", quote);
+    });
+    document.getElementById("material-2-enabled").addEventListener("change", quote);
+    document.getElementById("material-3-enabled").addEventListener("change", quote);
+    document.getElementById("process-different").addEventListener("change", quote);
+    document.getElementById("material").addEventListener("change", quote);
+    document.getElementById("material-2").addEventListener("change", quote);
+    document.getElementById("material-3").addEventListener("change", quote);
+    document.getElementById("process").addEventListener("change", () => {
+      updateExtraColorsVisibility();
+      quote();
+    });
+    document.getElementById("install-enabled").addEventListener("change", (e) => {
+      document.getElementById("install-options").classList.toggle("hidden", !e.target.checked);
+    });
+    loadPriceData();
+  </script>
+</body>
+</html>
