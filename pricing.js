@@ -406,13 +406,8 @@ function autoPriceSign() {
       });
     });
     breakdownRows.push({
-      label: "Hardware Markup",
-      detail: `${money(hardwareResult.rawTotal)} raw hardware x ${PRICING.sign.hardwareMarkup.toFixed(2)} markup = ${money(hardwarePrice)}.`,
-      amount: hardwarePrice - hardwareResult.rawTotal
-    });
-    breakdownRows.push({
       label: "Install Hardware Total",
-      detail: "Sum of hardware components plus markup.",
+      detail: `Final hardware total with ${PRICING.sign.hardwareMarkup.toFixed(2)} pricing applied.`,
       amount: hardwarePrice
     });
   } else {
