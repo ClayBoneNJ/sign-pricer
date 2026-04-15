@@ -14,7 +14,6 @@ const PRICING = {
     sheetPricingThreshold: 0.75,
     substrateMarkup: 2.0,
     graphicsMarkup: 2.15,
-    hardwareMarkup: 1.65,
     installBaseRate: 100,
     installAdvancedRate: 125,
     designRate: 25,
@@ -250,7 +249,7 @@ function calcSignHardwareCharges(trimLf, qty, sqftEach) {
   }
   return {
     rawTotal: hardware,
-    markedUpTotal: hardware * PRICING.sign.hardwareMarkup,
+    markedUpTotal: hardware,
     components
   };
 }
@@ -407,7 +406,7 @@ function autoPriceSign() {
     });
     breakdownRows.push({
       label: "Install Hardware Total",
-      detail: `Final hardware total with ${PRICING.sign.hardwareMarkup.toFixed(2)} pricing applied.`,
+      detail: "Final hardware total with no extra hardware markup applied.",
       amount: hardwarePrice
     });
   } else {
