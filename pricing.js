@@ -181,7 +181,7 @@ function calcSignHardwareCharges(trimLf, qty, sqftEach) {
     const frameChoice = document.querySelector('input[name="frame_choice"]:checked');
     if (frameChoice) {
       let frameCost = trimLf * (PRICING.sign.framePerLf[frameChoice.value] || 0);
-      let detail = `${trimLf.toFixed(2)} LF x ${money(PRICING.sign.framePerLf[frameChoice.value] || 0)}/LF`;
+      let detail = `Perimeter ${trimLf.toFixed(2)} LF x ${money(PRICING.sign.framePerLf[frameChoice.value] || 0)}/LF`;
       if (sqftEach > PRICING.sign.frameLargeAreaThreshold) {
         frameCost *= PRICING.sign.frameLargeMultiplier;
         detail += ` x ${PRICING.sign.frameLargeMultiplier.toFixed(2)} for signs over ${PRICING.sign.frameLargeAreaThreshold} sqft`;
@@ -403,11 +403,6 @@ function autoPriceSign() {
         detail: component.detail,
         amount: component.amount
       });
-    });
-    breakdownRows.push({
-      label: "Install Hardware Total",
-      detail: "Final hardware total with no extra hardware markup applied.",
-      amount: hardwarePrice
     });
   } else {
     breakdownRows.push({
