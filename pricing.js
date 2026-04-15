@@ -181,10 +181,10 @@ function calcSignHardwareCharges(trimLf, qty, sqftEach) {
     const frameChoice = document.querySelector('input[name="frame_choice"]:checked');
     if (frameChoice) {
       let frameCost = trimLf * (PRICING.sign.framePerLf[frameChoice.value] || 0);
-      let detail = `Perimeter ${trimLf.toFixed(2)} LF x ${money(PRICING.sign.framePerLf[frameChoice.value] || 0)}/LF`;
+      let detail = `Frame perimeter is ${trimLf.toFixed(2)} linear feet, billed at ${money(PRICING.sign.framePerLf[frameChoice.value] || 0)} per linear foot.`;
       if (sqftEach > PRICING.sign.frameLargeAreaThreshold) {
         frameCost *= PRICING.sign.frameLargeMultiplier;
-        detail += ` x ${PRICING.sign.frameLargeMultiplier.toFixed(2)} for signs over ${PRICING.sign.frameLargeAreaThreshold} sqft`;
+        detail += ` Because the sign is over ${PRICING.sign.frameLargeAreaThreshold} sq ft, the frame rate is multiplied by ${PRICING.sign.frameLargeMultiplier.toFixed(2)}.`;
       }
       hardware += frameCost;
       components.push({ label: `${frameChoice.value} frame`, detail, amount: frameCost });
@@ -197,7 +197,7 @@ function calcSignHardwareCharges(trimLf, qty, sqftEach) {
       hardware += trimCost;
       components.push({
         label: `${trimChoice.value} trim`,
-        detail: `${trimLf.toFixed(2)} LF x ${money(PRICING.sign.trimPerLf[trimChoice.value] || 0)}/LF`,
+        detail: `Trim perimeter is ${trimLf.toFixed(2)} linear feet, billed at ${money(PRICING.sign.trimPerLf[trimChoice.value] || 0)} per linear foot.`,
         amount: trimCost
       });
     }
@@ -209,12 +209,12 @@ function calcSignHardwareCharges(trimLf, qty, sqftEach) {
     hardware += screwsCost;
     components.push({
       label: `${$("posts_type").value} posts`,
-      detail: `${qty} x ${money(PRICING.sign.posts[$("posts_type").value] || 0)}`,
+      detail: `${qty} post set(s) at ${money(PRICING.sign.posts[$("posts_type").value] || 0)} each.`,
       amount: postsCost
     });
     components.push({
       label: "Screws / fasteners",
-      detail: `${qty} x ${money(PRICING.sign.screwsAllowance)}`,
+      detail: `${qty} hardware allowance at ${money(PRICING.sign.screwsAllowance)} each.`,
       amount: screwsCost
     });
   }
@@ -223,7 +223,7 @@ function calcSignHardwareCharges(trimLf, qty, sqftEach) {
     hardware += pvcCoverCost;
     components.push({
       label: "PVC post cover",
-      detail: `${qty} x ${money(PRICING.sign.pvcCover)}`,
+      detail: `${qty} cover set(s) at ${money(PRICING.sign.pvcCover)} each.`,
       amount: pvcCoverCost
     });
   }
@@ -232,17 +232,17 @@ function calcSignHardwareCharges(trimLf, qty, sqftEach) {
     hardware += wallMountCost;
     components.push({
       label: `${$("wall_mount_type").value} wall mount`,
-      detail: `${qty} x ${money(PRICING.sign.wallMount[$("wall_mount_type").value] || 0)}`,
+      detail: `${qty} wall-mount hardware set(s) at ${money(PRICING.sign.wallMount[$("wall_mount_type").value] || 0)} each.`,
       amount: wallMountCost
     });
   }
   if ($("bucket_truck_opt").checked) {
     let bucketCost = PRICING.sign.bucketBase;
-    let detail = `Base ${money(PRICING.sign.bucketBase)}`;
+    let detail = `Bucket truck base charge is ${money(PRICING.sign.bucketBase)}.`;
     if (num("bucket_height") > 20) {
       const extraHeightCost = (num("bucket_height") - 20) * PRICING.sign.bucketPerFtOver20;
       bucketCost += extraHeightCost;
-      detail += ` + ${(num("bucket_height") - 20).toFixed(0)} ft x ${money(PRICING.sign.bucketPerFtOver20)}`;
+      detail += ` Height above 20 ft adds ${(num("bucket_height") - 20).toFixed(0)} ft at ${money(PRICING.sign.bucketPerFtOver20)} per foot.`;
     }
     hardware += bucketCost;
     components.push({ label: "Bucket truck", detail, amount: bucketCost });
@@ -307,23 +307,23 @@ function autoPriceSign() {
       const sqftCost = substrate.cost / PRICING.sign.sheetSqft;
       substratePrice = totalSqft * sqftCost * PRICING.sign.substrateMarkup * signWasteMultiplier;
       breakdownRows.push({
-        label: `Substrate: ${$("substrate").value} partial sheet`,
-        detail: `${totalSqft.toFixed(2)} sqft x ${money(sqftCost)}/sqft x ${PRICING.sign.substrateMarkup.toFixed(2)} markup x ${signWasteMultiplier.toFixed(2)} waste. Uses sqft pricing below ${(PRICING.sign.sheetPricingThreshold * 100).toFixed(0)}% of a sheet.`,
+        label: `Substrate charge: ${$("substrate").value} priced as a cut piece`,
+        detail: `This job uses ${totalSqft.toFixed(2)} sq ft of ${$("substrate").value}. Because that is under ${(PRICING.sign.sheetPricingThreshold * 100).toFixed(0)}% of a full sheet, the app uses square-foot pricing: ${totalSqft.toFixed(2)} sq ft x ${money(sqftCost)}/sq ft x ${PRICING.sign.substrateMarkup.toFixed(2)} material markup x ${signWasteMultiplier.toFixed(2)} waste.`,
         amount: substratePrice
       });
     } else {
       const sheetCount = Math.max(1, Math.ceil(totalSqft / PRICING.sign.sheetSqft));
       substratePrice = sheetCount * substrate.cost * PRICING.sign.substrateMarkup * signWasteMultiplier;
       breakdownRows.push({
-        label: `Substrate: ${$("substrate").value} full sheet`,
-        detail: `${sheetCount} sheet x ${money(substrate.cost)} x ${PRICING.sign.substrateMarkup.toFixed(2)} markup x ${signWasteMultiplier.toFixed(2)} waste. Usage is ${(usageRatio * 100).toFixed(1)}% of a sheet.`,
+        label: `Substrate charge: ${$("substrate").value} priced as full sheet stock`,
+        detail: `This job uses ${(usageRatio * 100).toFixed(1)}% of a sheet, so it is billed as ${sheetCount} full sheet at ${money(substrate.cost)} each, with ${PRICING.sign.substrateMarkup.toFixed(2)} material markup and ${signWasteMultiplier.toFixed(2)} waste.`,
         amount: substratePrice
       });
     }
   } else {
     breakdownRows.push({
-      label: "Substrate",
-      detail: "No substrate charge applied.",
+      label: "Substrate charge",
+      detail: "No substrate was selected, so no substrate charge was added.",
       amount: 0
     });
   }
@@ -336,8 +336,8 @@ function autoPriceSign() {
     const digitalCost = (baseSqft + laminateCost + PRICING.sign.inkSqftCost + PRICING.sign.consumableSqftCost) * totalSqft * graphicsWasteMultiplier;
     graphicsPrice = (digitalCost * PRICING.sign.graphicsMarkup) + (num("item_digital") * PRICING.sign.digitalItemCharge);
     breakdownRows.push({
-      label: `Graphics: Digital ${$("digital_type").value}`,
-      detail: `${totalSqft.toFixed(2)} sqft x ${money(baseSqft + laminateCost + PRICING.sign.inkSqftCost + PRICING.sign.consumableSqftCost)}/sqft x ${graphicsWasteMultiplier.toFixed(2)} waste x ${PRICING.sign.graphicsMarkup.toFixed(2)} markup${num("item_digital") > 0 ? ` + ${num("item_digital")} item x ${money(PRICING.sign.digitalItemCharge)}` : ""}.`,
+      label: `Graphics charge: Digital print (${ $("digital_type").value })`,
+      detail: `Digital print materials total ${money(baseSqft + laminateCost + PRICING.sign.inkSqftCost + PRICING.sign.consumableSqftCost)}/sq ft, including media${$("laminate_opt").checked ? ", laminate" : ""}, ink, and consumables. The app applies that to ${totalSqft.toFixed(2)} sq ft, adds ${graphicsWasteMultiplier.toFixed(2)} waste, then uses a ${PRICING.sign.graphicsMarkup.toFixed(2)} graphics markup${num("item_digital") > 0 ? `. It also adds ${num("item_digital")} digital item charge at ${money(PRICING.sign.digitalItemCharge)} each` : ""}.`,
       amount: graphicsPrice
     });
   }
@@ -345,15 +345,15 @@ function autoPriceSign() {
     const vinylCost = (PRICING.sign.vinylSqftCost[$("vinyl_type").value] || 0) + PRICING.sign.appTapeSqftCost + PRICING.sign.consumableSqftCost;
     graphicsPrice = (vinylCost * totalSqft * graphicsWasteMultiplier * PRICING.sign.graphicsMarkup) + (num("item_vinyl") * PRICING.sign.vinylItemCharge);
     breakdownRows.push({
-      label: `Graphics: Vinyl ${$("vinyl_type").value}`,
-      detail: `${totalSqft.toFixed(2)} sqft x ${money(vinylCost)}/sqft x ${graphicsWasteMultiplier.toFixed(2)} waste x ${PRICING.sign.graphicsMarkup.toFixed(2)} markup${num("item_vinyl") > 0 ? ` + ${num("item_vinyl")} item x ${money(PRICING.sign.vinylItemCharge)}` : ""}.`,
+      label: `Graphics charge: Cut vinyl (${ $("vinyl_type").value })`,
+      detail: `Vinyl materials total ${money(vinylCost)}/sq ft, including film, application tape, and consumables. The app applies that to ${totalSqft.toFixed(2)} sq ft, adds ${graphicsWasteMultiplier.toFixed(2)} waste, then uses a ${PRICING.sign.graphicsMarkup.toFixed(2)} graphics markup${num("item_vinyl") > 0 ? `. It also adds ${num("item_vinyl")} vinyl item charge at ${money(PRICING.sign.vinylItemCharge)} each` : ""}.`,
       amount: graphicsPrice
     });
   }
   if (!graphicsMode) {
     breakdownRows.push({
-      label: "Graphics",
-      detail: "No graphics charge applied.",
+      label: "Graphics charge",
+      detail: "No digital print or vinyl graphics were selected, so no graphics charge was added.",
       amount: 0
     });
   }
@@ -362,14 +362,14 @@ function autoPriceSign() {
   if (num("design_hours") > 0) {
     designPrice = Math.max(PRICING.sign.designMinimum, num("design_hours") * PRICING.sign.designRate);
     breakdownRows.push({
-      label: "Design / Prep",
-      detail: `${num("design_hours").toFixed(2)} hr x ${money(PRICING.sign.designRate)} with ${money(PRICING.sign.designMinimum)} minimum.`,
+      label: "Design and prep charge",
+      detail: `Design time is billed at ${money(PRICING.sign.designRate)} per hour for ${num("design_hours").toFixed(2)} hour(s), with a minimum design charge of ${money(PRICING.sign.designMinimum)}.`,
       amount: designPrice
     });
   } else {
     breakdownRows.push({
-      label: "Design / Prep",
-      detail: "No design hours entered.",
+      label: "Design and prep charge",
+      detail: "No design hours were entered, so no design or prep charge was added.",
       amount: 0
     });
   }
@@ -382,14 +382,14 @@ function autoPriceSign() {
   if (laborHours > 0 || num("distance") > 0 || $("posts_opt").checked || $("wall_mount_opt").checked) {
     installPrice = Math.max(PRICING.sign.installMinimum, (laborHours * installRate) + travelCharge);
     breakdownRows.push({
-      label: "Install Labor / Travel",
-      detail: `${laborHours.toFixed(2)} labor hr x ${money(installRate)}${travelCharge > 0 ? ` + ${money(travelCharge)} travel` : ""}, with ${money(PRICING.sign.installMinimum)} minimum.`,
+      label: "Install labor and travel charge",
+      detail: `Install labor is ${laborHours.toFixed(2)} hour(s) at ${money(installRate)}${travelCharge > 0 ? `, plus ${money(travelCharge)} for travel` : ""}. If that total falls below the minimum install charge, the app uses ${money(PRICING.sign.installMinimum)} instead.`,
       amount: installPrice
     });
   } else {
     breakdownRows.push({
-      label: "Install Labor / Travel",
-      detail: "No install labor or travel charge applied.",
+      label: "Install labor and travel charge",
+      detail: "No install labor or travel inputs were entered, so no labor/travel charge was added.",
       amount: 0
     });
   }
@@ -399,15 +399,15 @@ function autoPriceSign() {
   if (hardwareResult.components.length) {
     hardwareResult.components.forEach((component) => {
       breakdownRows.push({
-        label: `Hardware: ${component.label}`,
+        label: `Install hardware: ${component.label}`,
         detail: component.detail,
         amount: component.amount
       });
     });
   } else {
     breakdownRows.push({
-      label: "Install Hardware",
-      detail: "No hardware charge applied.",
+      label: "Install hardware charge",
+      detail: "No hardware options were selected, so no install hardware charge was added.",
       amount: 0
     });
   }
@@ -418,13 +418,13 @@ function autoPriceSign() {
   const minimumAdjustment = Math.max(0, PRICING.sign.minimumCharge - subtotal);
   otherPrice += minimumAdjustment;
   breakdownRows.push({
-    label: "Other / Add-ons",
-    detail: `${$("holes_opt").checked ? `Holes ${money(PRICING.sign.holesCharge)}. ` : ""}${$("corners_opt").checked ? `Corners ${money(PRICING.sign.cornersCharge)}. ` : ""}${$("grommets_opt").checked ? `Grommets included. ` : ""}${selectedOptions().includes("VELCRO") ? `Velcro ${money(PRICING.sign.velcroCharge)}. ` : ""}${selectedOptions().includes("D/S TAPE") ? `D/S Tape ${money(PRICING.sign.tapeCharge)}. ` : ""}${$("dig_opt").checked ? `Dig x${qty} included. ` : ""}${minimumAdjustment > 0 ? `Minimum adjustment ${money(minimumAdjustment)}.` : "No minimum adjustment."}`.trim(),
+    label: "Other charges and add-ons",
+    detail: `${$("holes_opt").checked ? `Holes add ${money(PRICING.sign.holesCharge)}. ` : ""}${$("corners_opt").checked ? `Corners add ${money(PRICING.sign.cornersCharge)}. ` : ""}${$("grommets_opt").checked ? `Grommets are included in this line. ` : ""}${selectedOptions().includes("VELCRO") ? `Velcro adds ${money(PRICING.sign.velcroCharge)}. ` : ""}${selectedOptions().includes("D/S TAPE") ? `D/S tape adds ${money(PRICING.sign.tapeCharge)}. ` : ""}${$("dig_opt").checked ? `Dig charge is included for ${qty} sign${qty === 1 ? "" : "s"}. ` : ""}${minimumAdjustment > 0 ? `A minimum job adjustment of ${money(minimumAdjustment)} was added to reach the shop minimum.` : "No minimum job adjustment was needed."}`.trim(),
     amount: otherPrice
   });
   breakdownRows.push({
-    label: "Total Auto Price",
-    detail: `${totalSqft.toFixed(2)} total sqft across ${qty} sign${qty === 1 ? "" : "s"}${$("faces").value === "Double Sided" ? ", double sided" : ""}.`,
+    label: "Final auto-priced total",
+    detail: `This total covers ${totalSqft.toFixed(2)} sq ft across ${qty} sign${qty === 1 ? "" : "s"}${$("faces").value === "Double Sided" ? " and includes both sides" : ""}.`,
     amount: subtotal + minimumAdjustment
   });
   lastSignPricingBreakdown = breakdownRows;
