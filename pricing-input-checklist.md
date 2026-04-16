@@ -10,7 +10,7 @@ Leave blank if still unknown: `[ ]`
 ## 1. Shop Rates
 
 [x] Standard in-shop labor rate: `$50 / hr`
-[x] Design / layout / file prep rate: `$25 / hr`
+[x] Design / layout / file prep rate: `$100 / hr`
 [x] Install labor rate: `$50 / hr`
 [x] Helper / second installer rate if different: `$30 / hr`
 [x] Travel rate if billed separately: `$20 / hr`
@@ -117,7 +117,7 @@ Cast `24in x 10yd` = about `60 sq ft`
 [x] Full wrap pricing method decided: `Manual override / package quote`
 [x] Vehicle template / setup fee: `$35`
 [x] Standard vehicle design fee: `$250`
-[x] Additional revision fee: `$25 / hr`
+[x] Additional revision fee: `$100 / hr`
 [x] Removal rate: `$95 / hr`
 [x] Removal minimum charge: `$75`
 [x] Surface prep / cleanup fee if needed: `$35`
@@ -167,7 +167,7 @@ Install rate above is customer-facing billing rate. Your internal labor rate can
 [x] Vector conversion fee: `$35`
 [x] Full custom design billed hourly
 [x] Proof revisions included: `2`
-[x] Additional revisions billed at: `$25 / hr`
+[x] Additional revisions billed at: `$100 / hr`
 [x] Print-ready customer files reduce design charge
 [x] Archiving / job setup fee used: `$10`
 
