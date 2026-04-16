@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/png" href="./ChatGPT%20Image%20Apr%2016,%202026,%2009_33_45%20AM.png">
-  <title>Pricing Worksheet v3.8</title>
+  <title>Pricing Worksheet v3.9</title>
   <style>
     :root {
       --bg: #e8efec;
@@ -88,6 +88,44 @@
       text-transform: uppercase;
       letter-spacing: .7px;
       font-weight: 800;
+    }
+    .collapsible-section {
+      padding: 0;
+    }
+    .collapsible-section details {
+      display: block;
+    }
+    .section-summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .section-summary::-webkit-details-marker {
+      display: none;
+    }
+    .section-summary .section-title {
+      font-size: 12px;
+      color: #1f6a4d;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      font-weight: 800;
+    }
+    .section-summary::after {
+      content: "▾";
+      font-size: 14px;
+      color: #1f6a4d;
+      line-height: 1;
+    }
+    .collapsible-section details[open] .section-summary::after {
+      content: "▴";
+    }
+    .collapsible-body {
+      padding: 0 9px 9px;
     }
     .row { display: grid; gap: 8px; margin-bottom: 8px; }
     .row.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -531,9 +569,9 @@
 <body class="theme-light">
   <div class="wrap">
     <section class="hero">
-      <h1>Pricing Worksheet v3.8</h1>
+      <h1>Pricing Worksheet v3.9</h1>
       <p>Built from your worksheet form, with print-ready work order output.</p>
-      <div class="version-pill">Version v3.8</div>
+      <div class="version-pill">Version v3.9</div>
       <div class="theme-bar" role="group" aria-label="Theme selector">
         <button type="button" class="theme-btn" data-theme="light">Light Mode</button>
         <button type="button" class="theme-btn" data-theme="dark">Dark Mode</button>
@@ -612,113 +650,125 @@
           </div>
         </div>
 
-        <div class="section">
-          <h3>Extras</h3>
-          <!-- Add new option dropdown rows directly under the related checkbox and match its grid column in CSS. -->
-          <div class="checks">
-            <label><input id="holes_opt" type="checkbox" class="opt" value="HOLES"> Holes</label>
-            <label><input id="corners_opt" type="checkbox" class="opt" value="CORNERS"> Corners</label>
-            <div class="choice-row" id="holes_choice_row">
-              <span>Hole Size</span>
-              <select id="holes_size">
-                <option>1/8</option>
-                <option>1/4</option>
-                <option>3/8</option>
-                <option>1/2</option>
-              </select>
-            </div>
-            <div class="choice-row" id="corners_choice_row">
-              <span>Corner Radius</span>
-              <select id="corners_size">
-                <option>1</option>
-                <option>1/2</option>
-                <option>1/4</option>
-              </select>
-            </div>
-            <label><input id="grommets_opt" type="checkbox" class="opt" value="GROMMETS"> Grommets</label>
-            <div class="choice-row" id="grommets_choice_row">
-              <span>Pattern</span>
-              <select id="grommets_pattern">
-                <option>Top Corners</option>
-                <option>4 Corners</option>
-                <option>Every ___ Feet</option>
-              </select>
-              <span class="inline-conditional" id="grommets_spacing_wrap">
-                <input id="grommets_spacing" type="number" min="1" step="1" value="1">
-              </span>
-            </div>
-            <label><input type="checkbox" class="opt" value="VELCRO"> Velcro</label>
-            <label><input type="checkbox" class="opt" value="D/S TAPE"> D/S Tape</label>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3>Frame / Trim</h3>
-          <div class="frame-trim-grid">
-            <div class="frame-trim-col">
-              <label><input id="frame_included" type="checkbox"> Frame</label>
-              <div class="subchecks" id="frame_options">
-                <label><input type="radio" name="frame_choice" class="opt frame-opt" value="THIN WALL"> Thin Wall</label>
-                <label><input type="radio" name="frame_choice" class="opt frame-opt" value="WELDED"> Welded</label>
+        <div class="section collapsible-section">
+          <details>
+            <summary class="section-summary"><span class="section-title">Extras</span></summary>
+            <div class="collapsible-body">
+              <!-- Add new option dropdown rows directly under the related checkbox and match its grid column in CSS. -->
+              <div class="checks">
+                <label><input id="holes_opt" type="checkbox" class="opt" value="HOLES"> Holes</label>
+                <label><input id="corners_opt" type="checkbox" class="opt" value="CORNERS"> Corners</label>
+                <div class="choice-row" id="holes_choice_row">
+                  <span>Hole Size</span>
+                  <select id="holes_size">
+                    <option>1/8</option>
+                    <option>1/4</option>
+                    <option>3/8</option>
+                    <option>1/2</option>
+                  </select>
+                </div>
+                <div class="choice-row" id="corners_choice_row">
+                  <span>Corner Radius</span>
+                  <select id="corners_size">
+                    <option>1</option>
+                    <option>1/2</option>
+                    <option>1/4</option>
+                  </select>
+                </div>
+                <label><input id="grommets_opt" type="checkbox" class="opt" value="GROMMETS"> Grommets</label>
+                <div class="choice-row" id="grommets_choice_row">
+                  <span>Pattern</span>
+                  <select id="grommets_pattern">
+                    <option>Top Corners</option>
+                    <option>4 Corners</option>
+                    <option>Every ___ Feet</option>
+                  </select>
+                  <span class="inline-conditional" id="grommets_spacing_wrap">
+                    <input id="grommets_spacing" type="number" min="1" step="1" value="1">
+                  </span>
+                </div>
+                <label><input type="checkbox" class="opt" value="VELCRO"> Velcro</label>
+                <label><input type="checkbox" class="opt" value="D/S TAPE"> D/S Tape</label>
               </div>
             </div>
-            <div class="frame-trim-col">
-              <label><input id="trim_included" type="checkbox"> Trim <span id="trim_linear_ft">(0.00 LF)</span></label>
-              <div class="subchecks" id="trim_options">
-                <label><input type="radio" name="trim_choice" class="opt trim-opt" value="J TRIM"> J Trim</label>
-                <label><input type="radio" name="trim_choice" class="opt trim-opt" value="L TRIM"> L Trim</label>
-              </div>
-            </div>
-          </div>
+          </details>
         </div>
 
-        <div class="section">
-          <h3>Install</h3>
-          <div class="checks">
-            <label><input id="posts_opt" type="checkbox" class="opt" value="POSTS"> Posts</label>
-            <label><input id="wall_mount_opt" type="checkbox" class="opt" value="WALL MOUNT"> Wall Mount</label>
-            <label><input id="window_graphics_opt" type="checkbox" class="opt" value="WINDOW GRAPHICS"> Window Graphics</label>
-            <div class="choice-row" id="posts_choice_row">
-              <span>Post Type</span>
-              <select id="posts_type">
-                <option>Wood</option>
-                <option>Aluminum</option>
-                <option>U-Channel</option>
-              </select>
+        <div class="section collapsible-section">
+          <details>
+            <summary class="section-summary"><span class="section-title">Frame / Trim</span></summary>
+            <div class="collapsible-body">
+              <div class="frame-trim-grid">
+                <div class="frame-trim-col">
+                  <label><input id="frame_included" type="checkbox"> Frame</label>
+                  <div class="subchecks" id="frame_options">
+                    <label><input type="radio" name="frame_choice" class="opt frame-opt" value="THIN WALL"> Thin Wall</label>
+                    <label><input type="radio" name="frame_choice" class="opt frame-opt" value="WELDED"> Welded</label>
+                  </div>
+                </div>
+                <div class="frame-trim-col">
+                  <label><input id="trim_included" type="checkbox"> Trim <span id="trim_linear_ft">(0.00 LF)</span></label>
+                  <div class="subchecks" id="trim_options">
+                    <label><input type="radio" name="trim_choice" class="opt trim-opt" value="J TRIM"> J Trim</label>
+                    <label><input type="radio" name="trim_choice" class="opt trim-opt" value="L TRIM"> L Trim</label>
+                  </div>
+                </div>
+              </div>
             </div>
-            <label class="conditional-label" id="pvc_cover_label"><input id="pvc_cover_opt" type="checkbox" class="opt" value="PVC COVER"> PVC Cover</label>
-            <div class="choice-row" id="wall_mount_choice_row">
-              <span>Mount Type</span>
-              <select id="wall_mount_type">
-                <option>Cleats</option>
-                <option>14s</option>
-                <option>Deck Screws</option>
-                <option>Zipits</option>
-                <option>Tapcon</option>
-                <option>Tape</option>
-                <option>Unknown</option>
-              </select>
+          </details>
+        </div>
+
+        <div class="section collapsible-section">
+          <details>
+            <summary class="section-summary"><span class="section-title">Install</span></summary>
+            <div class="collapsible-body">
+              <div class="checks">
+                <label><input id="posts_opt" type="checkbox" class="opt" value="POSTS"> Posts</label>
+                <label><input id="wall_mount_opt" type="checkbox" class="opt" value="WALL MOUNT"> Wall Mount</label>
+                <label><input id="window_graphics_opt" type="checkbox" class="opt" value="WINDOW GRAPHICS"> Window Graphics</label>
+                <div class="choice-row" id="posts_choice_row">
+                  <span>Post Type</span>
+                  <select id="posts_type">
+                    <option>Wood</option>
+                    <option>Aluminum</option>
+                    <option>U-Channel</option>
+                  </select>
+                </div>
+                <label class="conditional-label" id="pvc_cover_label"><input id="pvc_cover_opt" type="checkbox" class="opt" value="PVC COVER"> PVC Cover</label>
+                <div class="choice-row" id="wall_mount_choice_row">
+                  <span>Mount Type</span>
+                  <select id="wall_mount_type">
+                    <option>Cleats</option>
+                    <option>14s</option>
+                    <option>Deck Screws</option>
+                    <option>Zipits</option>
+                    <option>Tapcon</option>
+                    <option>Tape</option>
+                    <option>Unknown</option>
+                  </select>
+                </div>
+                <label class="conditional-label" id="dig_label"><input id="dig_opt" type="checkbox" class="opt" value="DIG"> Dig</label>
+                <label><input id="bucket_truck_opt" type="checkbox" class="opt" value="BUCKET TRUCK"> Bucket Truck</label>
+                <div class="choice-row" id="dig_choice_row">
+                  <span>Surface</span>
+                  <select id="dig_surface">
+                    <option>Dirt</option>
+                    <option>Asphalt</option>
+                    <option>Concrete</option>
+                    <option>Unknown</option>
+                  </select>
+                </div>
+                <div class="choice-row" id="bucket_height_row">
+                  <span>Approx Height (ft)</span>
+                  <input id="bucket_height" type="number" min="0" step="1" value="0">
+                </div>
+              </div>
+              <div class="field" style="margin-top: 8px;">
+                <label>Special Instructions</label>
+                <textarea id="install_instructions" placeholder="Install-specific notes"></textarea>
+              </div>
             </div>
-            <label class="conditional-label" id="dig_label"><input id="dig_opt" type="checkbox" class="opt" value="DIG"> Dig</label>
-            <label><input id="bucket_truck_opt" type="checkbox" class="opt" value="BUCKET TRUCK"> Bucket Truck</label>
-            <div class="choice-row" id="dig_choice_row">
-              <span>Surface</span>
-              <select id="dig_surface">
-                <option>Dirt</option>
-                <option>Asphalt</option>
-                <option>Concrete</option>
-                <option>Unknown</option>
-              </select>
-            </div>
-            <div class="choice-row" id="bucket_height_row">
-              <span>Approx Height (ft)</span>
-              <input id="bucket_height" type="number" min="0" step="1" value="0">
-            </div>
-          </div>
-          <div class="field" style="margin-top: 8px;">
-            <label>Special Instructions</label>
-            <textarea id="install_instructions" placeholder="Install-specific notes"></textarea>
-          </div>
+          </details>
         </div>
 
         <div class="section">
