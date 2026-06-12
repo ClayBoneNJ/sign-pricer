@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/png" href="./ChatGPT%20Image%20Apr%2016,%202026,%2009_33_45%20AM.png">
-  <title>Pricing Worksheet v3.9</title>
+  <title>Pricing Worksheet v4.0</title>
   <style>
     :root {
       --bg: #e8efec;
@@ -569,9 +569,9 @@
 <body class="theme-light">
   <div class="wrap">
     <section class="hero">
-      <h1>Pricing Worksheet v3.9</h1>
+      <h1>Pricing Worksheet v4.0</h1>
       <p>Built from your worksheet form, with print-ready work order output.</p>
-      <div class="version-pill">Version v3.9</div>
+      <div class="version-pill">Version v4.0</div>
       <div class="theme-bar" role="group" aria-label="Theme selector">
         <button type="button" class="theme-btn" data-theme="light">Light Mode</button>
         <button type="button" class="theme-btn" data-theme="dark">Dark Mode</button>
@@ -607,7 +607,39 @@
             <div class="field"><label>Sq. Ft.</label><input id="sqft" type="text" readonly></div>
             <div class="field"><label>Substrate</label>
               <select id="substrate">
-                <option>None</option><option>.040</option><option>.080</option><option>3MM PVC</option><option>4mm CORO</option><option>10mm CORO</option><option>ACRYLIC</option><option>BANNER</option><option>OTHER</option>
+                <option>None</option>
+                <option>.040 ALUM WHITE</option>
+                <option>.040 ALUM COLORS</option>
+                <option>.080 ALUM WHITE</option>
+                <option>.080 ALUM MILL</option>
+                <option>.125 ALUM MILL</option>
+                <option>22 GA GALV STEEL</option>
+                <option>PVC 1MM WHITE INDOOR</option>
+                <option>PVC 3MM WHITE INDOOR</option>
+                <option>PVC 6MM WHITE INDOOR</option>
+                <option>PVC 12MM WHITE INDOOR</option>
+                <option>PVC 19MM WHITE INDOOR</option>
+                <option>PVC 24MM WHITE INDOOR</option>
+                <option>PVC 3MM BLACK INDOOR</option>
+                <option>PVC 6MM BLACK INDOOR</option>
+                <option>PVC 12MM BLACK INDOOR</option>
+                <option>PVC 19MM BLACK INDOOR</option>
+                <option>PVC 24MM BLACK INDOOR</option>
+                <option>PVC KOMACEL 6MM EXT</option>
+                <option>PVC KOMACEL 12MM EXT</option>
+                <option>PVC KOMACEL 19MM EXT</option>
+                <option>PVC KOMACEL 24MM EXT</option>
+                <option>MAGNET SHEET .030</option>
+                <option>CORO WHITE 4MM</option>
+                <option>CORO BLACK 4MM</option>
+                <option>CORO WHITE 10MM</option>
+                <option>CORO BLACK 10MM</option>
+                <option>ACM 3MM WHITE</option>
+                <option>ACM 3MM COLORS</option>
+                <option>ACM 3MM STEEL</option>
+                <option>ACM 6MM WHITE</option>
+                <option>ACM 6MM BLACK</option>
+                <option>OTHER</option>
               </select>
             </div>
           </div>
@@ -627,20 +659,26 @@
             <div class="choice-row" id="digital_choice_row">
               <span>Digital Type</span>
               <select id="digital_type">
-                <option>Calendar</option>
-                <option>Premium</option>
-                <option>Reflective</option>
-                <option>Translucent</option>
+                <option>Calendared laminated</option>
+                <option>Calendared unlaminated</option>
+                <option>Premium laminated</option>
+                <option>AEG reflective laminated</option>
+                <option>AEG reflective unlaminated</option>
+                <option>3M 680 reflective laminated</option>
+                <option>Tran lam top layer</option>
+                <option>Tran lam plus back-up</option>
+                <option>Banner with hems and grommets</option>
+                <option>Banner no hems or grommets</option>
               </select>
             </div>
-            <label class="conditional-label" id="laminate_label"><input id="laminate_opt" type="checkbox" class="opt" value="LAMINATE"> Laminate</label>
+            <label class="conditional-label" id="laminate_label"><input id="laminate_opt" type="checkbox" class="opt" value="LAMINATE NOTE"> Laminate Note</label>
             <div class="choice-row" id="vinyl_choice_row">
               <span>Vinyl Type</span>
               <select id="vinyl_type">
-                <option>Calendar</option>
-                <option>Cast</option>
-                <option>Reflective</option>
-                <option>Translucent</option>
+                <option>Calendared vinyl</option>
+                <option>3M 7125 premium</option>
+                <option>680 reflective</option>
+                <option>Trans vinyl</option>
               </select>
             </div>
           </div>

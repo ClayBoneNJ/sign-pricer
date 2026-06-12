@@ -1,5 +1,7 @@
 # Pricing Input Checklist
 
+Latest shop price sheet applied: `6/6/26`
+
 Use this sheet to fill in the shop-specific numbers needed to wire pricing into the pricer.
 
 Mark each item when decided: `[x]`
@@ -58,17 +60,37 @@ Small custom jobs can use `15%` total waste when appropriate.
 
 Fill in only the materials you actually sell often. All sheets are 4' x 8`.
 
-[x] Coroplast 4mm: `$16` per sheet
-[x] Coroplast 10mm: `$40` per sheet
-[x] PVC 3mm: `$48` per sheet
-[x] PVC 6mm: `$66` per sheet
-[x] ACM / Dibond 3mm: `$60` per sheet
-[x] Aluminum .040: `$162` per sheet
-[x] Aluminum .080: `$230` per sheet
-[x] MDO 1/2": `$95` per sheet
-[x] Styrene: `$42` per sheet
-[x] Foam board: `$24` per sheet
-[x] Magnetic material: `$6` per sq ft
+[x] Aluminum .040 white: `$8` per sq ft, plus `$10` cut
+[x] Aluminum .040 colors: `$10` per sq ft, plus `$10` cut
+[x] Aluminum .080 white: `$16` per sq ft, plus `$20` cut
+[x] Aluminum .080 mill: `$14` per sq ft, plus `$20` cut
+[x] Aluminum .125 mill: `$18` per sq ft, plus `$40` cut
+[x] 22 gauge galvanized steel: `$12` per sq ft, plus `$20` cut
+[x] PVC 1mm white indoor: `$2.50` per sq ft, plus `$1` cut
+[x] PVC 3mm white indoor: `$4` per sq ft, plus `$5` cut
+[x] PVC 6mm white indoor: `$7` per sq ft, plus `$5` cut
+[x] PVC 12mm white indoor: `$12` per sq ft, plus `$10` cut
+[x] PVC 19mm white indoor: `$16` per sq ft, plus `$10` cut
+[x] PVC 24mm white indoor: `$22` per sq ft, plus `$10` cut
+[x] PVC 3mm black indoor: `$5` per sq ft, plus `$5` cut
+[x] PVC 6mm black indoor: `$8` per sq ft, plus `$5` cut
+[x] PVC 12mm black indoor: `$14` per sq ft, plus `$10` cut
+[x] PVC 19mm black indoor: `$18` per sq ft, plus `$10` cut
+[x] PVC 24mm black indoor: `$25` per sq ft, plus `$10` cut
+[x] PVC Komacel 6mm exterior: `$13` per sq ft, plus `$5` cut
+[x] PVC Komacel 12mm exterior: `$18` per sq ft, plus `$10` cut
+[x] PVC Komacel 19mm exterior: `$24` per sq ft, plus `$10` cut
+[x] PVC Komacel 24mm exterior: `$28` per sq ft, plus `$10` cut
+[x] Magnetic material .030: `$5` per sq ft, plus `$5` cut
+[x] Coroplast white 4mm: `$1` per sq ft, plus `$5` first cut
+[x] Coroplast black 4mm: `$3` per sq ft, plus `$5` first cut
+[x] Coroplast white 10mm: `$5` per sq ft, plus `$10` first cut
+[x] Coroplast black 10mm: `$6` per sq ft, plus `$10` first cut
+[x] ACM 3mm white: `$8.50` per sq ft, plus `$10` first cut
+[x] ACM 3mm colors: `$10.50` per sq ft, plus `$10` first cut
+[x] ACM 3mm steel: `$12` per sq ft, plus `$10` first cut
+[x] ACM 6mm white: `$11` per sq ft, plus `$10` first cut
+[x] ACM 6mm black: `$18` per sq ft, plus `$10` first cut
 [x] Yard sign stake: `$2.50` each
 [x] Frames / posts / riders / brackets: `Bill actual hardware + labor`
 [ ] Other material: `__________________` cost `__________________`
@@ -82,37 +104,53 @@ Sheet sizes used:
 
 Notes:
 
-Blank defaults above are placeholder numbers for materials you did not fill in yet.
+Long skinny items that waste material should be priced higher. Use half price for unused material when appropriate.
 
 ---
 
 ## 5. Print / Graphics Materials
 
-[x] Calendared print vinyl cost: `$35` per `24in x 10yd` roll
-[x] Cast print vinyl cost: `$72` per `24in x 10yd` roll
-[x] Laminate cost: `$0.60` per sq ft
-[x] Cut vinyl cost: `$3.00` per sq ft
-[x] Reflective vinyl cost: `$7.00` per sq ft
-[x] Specialty film cost: `$8.00` per sq ft
-[x] Application tape cost: `$0.20` per sq ft
-[x] Print ink allowance if tracked separately: `$0.35` per sq ft
-[x] Transfer tape / mask allowance: `$0.20` per sq ft
-[x] Other graphics supply: `Cleaning / blades / shop consumables allowance` cost `$0.15 per sq ft`
+[x] Premium laminated print, applied in shop: `$14` per sq ft
+[x] Premium laminated print, customer apply: `$12` per sq ft
+[x] Calendared laminated print, applied in shop: `$10` per sq ft
+[x] Calendared laminated print, customer apply: `$8` per sq ft
+[x] Calendared unlaminated print, applied in shop: `$7` per sq ft
+[x] Calendared unlaminated print, customer apply: `$5` per sq ft
+[x] AEG reflective laminated print, applied in shop: `$17` per sq ft
+[x] AEG reflective laminated print, customer apply: `$15` per sq ft
+[x] AEG reflective unlaminated print, applied in shop: `$13` per sq ft
+[x] AEG reflective unlaminated print, customer apply: `$11` per sq ft
+[x] 3M 680 reflective laminated print, applied in shop: `$28` per sq ft
+[x] 3M 680 reflective laminated print, customer apply: `$25` per sq ft
+[x] Trans lam just top layer, applied in shop: `$16` per sq ft
+[x] Trans lam just top layer, customer apply: `$14` per sq ft
+[x] Trans lam plus back-up, applied in shop: `$28` per sq ft
+[x] Banner with hems and grommets: `$7` per sq ft
+[x] Banner no hems or grommets: `$5` per sq ft
+[x] Thin wall aluminum tube across top: add `$25` up to 10 ft / `$45` up to 20 ft
+[x] 3M 7125 premium plotted vinyl, applied in shop: `$10` per sq ft
+[x] 3M 7125 premium plotted vinyl, customer apply: `$8` per sq ft
+[x] Calendared plotted vinyl, applied in shop: `$7` per sq ft
+[x] Calendared plotted vinyl, customer apply: `$5` per sq ft
+[x] 680 reflective plotted vinyl, applied in shop: `$40` per sq ft
+[x] 680 reflective plotted vinyl, customer apply: `$38` per sq ft
+[x] Trans plotted vinyl, applied in shop: `$14` per sq ft
+[x] Trans plotted vinyl, customer apply: `$12` per sq ft
 
 Notes:
 
-Your roll costs can be converted in the app to square-foot cost automatically.
+The app uses the applied-in-shop sell rates for automatic pricing. Customer-apply prices are documented here for manual override or future profile work.
 
-Calendared `24in x 10yd` = about `60 sq ft`
-
-Cast `24in x 10yd` = about `60 sq ft`
+Long skinny items that waste material should be priced higher. Use half price for unused material when appropriate.
 
 ---
 
 ## 6. Vehicle Graphics
 
-[x] Standard printed vehicle graphic rate target: `$14` per sq ft
-[x] Standard cut vinyl vehicle graphic rate target: `$12` per sq ft
+[x] Standard printed calendared vehicle graphic rate target: `$10` per sq ft
+[x] Standard printed premium/cast vehicle graphic rate target: `$14` per sq ft
+[x] Standard cut vinyl vehicle graphic rate target: `$7` per sq ft
+[x] Reflective vehicle graphic rate target: `$40` per sq ft
 [x] Partial wrap pricing method decided: `Square foot price + install + design`
 [x] Full wrap pricing method decided: `Manual override / package quote`
 [x] Vehicle template / setup fee: `$35`

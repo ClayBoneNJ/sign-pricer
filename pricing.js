@@ -8,12 +8,9 @@ const PRICING = {
   sign: {
     minimumCharge: 50,
     signWastePercent: 0.10,
-    graphicsWastePercent: 0.10,
-    extraSmallJobWastePercent: 0.05,
     sheetSqft: 32,
     sheetPricingThreshold: 0.75,
     substrateMarkup: 2.0,
-    graphicsMarkup: 2.15,
     installBaseRate: 100,
     installAdvancedRate: 125,
     designRate: 100,
@@ -24,33 +21,59 @@ const PRICING = {
     installMinimum: 50,
     substrates: {
       "None": { cost: 0, type: "none" },
-      ".040": { cost: 162, type: "sheet" },
-      ".080": { cost: 230, type: "sheet" },
-      "3MM PVC": { cost: 48, type: "sheet" },
-      "4mm CORO": { cost: 16, type: "sheet" },
-      "10mm CORO": { cost: 40, type: "sheet" },
-      "ACRYLIC": { cost: 95, type: "sheet" },
-      "BANNER": { cost: 24, type: "sheet" },
-      "OTHER": { cost: 60, type: "sheet" }
+      ".040 ALUM WHITE": { sellSqft: 8, cutFee: 10, type: "sqft" },
+      ".040 ALUM COLORS": { sellSqft: 10, cutFee: 10, type: "sqft" },
+      ".080 ALUM WHITE": { sellSqft: 16, cutFee: 20, type: "sqft" },
+      ".080 ALUM MILL": { sellSqft: 14, cutFee: 20, type: "sqft" },
+      ".125 ALUM MILL": { sellSqft: 18, cutFee: 40, type: "sqft" },
+      "22 GA GALV STEEL": { sellSqft: 12, cutFee: 20, type: "sqft" },
+      "PVC 1MM WHITE INDOOR": { sellSqft: 2.5, cutFee: 1, type: "sqft" },
+      "PVC 3MM WHITE INDOOR": { sellSqft: 4, cutFee: 5, type: "sqft" },
+      "PVC 6MM WHITE INDOOR": { sellSqft: 7, cutFee: 5, type: "sqft" },
+      "PVC 12MM WHITE INDOOR": { sellSqft: 12, cutFee: 10, type: "sqft" },
+      "PVC 19MM WHITE INDOOR": { sellSqft: 16, cutFee: 10, type: "sqft" },
+      "PVC 24MM WHITE INDOOR": { sellSqft: 22, cutFee: 10, type: "sqft" },
+      "PVC 3MM BLACK INDOOR": { sellSqft: 5, cutFee: 5, type: "sqft" },
+      "PVC 6MM BLACK INDOOR": { sellSqft: 8, cutFee: 5, type: "sqft" },
+      "PVC 12MM BLACK INDOOR": { sellSqft: 14, cutFee: 10, type: "sqft" },
+      "PVC 19MM BLACK INDOOR": { sellSqft: 18, cutFee: 10, type: "sqft" },
+      "PVC 24MM BLACK INDOOR": { sellSqft: 25, cutFee: 10, type: "sqft" },
+      "PVC KOMACEL 6MM EXT": { sellSqft: 13, cutFee: 5, type: "sqft" },
+      "PVC KOMACEL 12MM EXT": { sellSqft: 18, cutFee: 10, type: "sqft" },
+      "PVC KOMACEL 19MM EXT": { sellSqft: 24, cutFee: 10, type: "sqft" },
+      "PVC KOMACEL 24MM EXT": { sellSqft: 28, cutFee: 10, type: "sqft" },
+      "MAGNET SHEET .030": { sellSqft: 5, cutFee: 5, type: "sqft" },
+      "CORO WHITE 4MM": { sellSqft: 1, cutFee: 5, type: "sqft" },
+      "CORO BLACK 4MM": { sellSqft: 3, cutFee: 5, type: "sqft" },
+      "CORO WHITE 10MM": { sellSqft: 5, cutFee: 10, type: "sqft" },
+      "CORO BLACK 10MM": { sellSqft: 6, cutFee: 10, type: "sqft" },
+      "ACM 3MM WHITE": { sellSqft: 8.5, cutFee: 10, type: "sqft" },
+      "ACM 3MM COLORS": { sellSqft: 10.5, cutFee: 10, type: "sqft" },
+      "ACM 3MM STEEL": { sellSqft: 12, cutFee: 10, type: "sqft" },
+      "ACM 6MM WHITE": { sellSqft: 11, cutFee: 10, type: "sqft" },
+      "ACM 6MM BLACK": { sellSqft: 18, cutFee: 10, type: "sqft" },
+      "OTHER": { sellSqft: 0, cutFee: 0, type: "sqft" }
     },
-    digitalSqftCost: {
-      Calendar: 35 / 60,
-      Premium: 72 / 60,
-      Reflective: 7,
-      Translucent: 8
+    digitalSqftRate: {
+      "Calendared laminated": 10,
+      "Calendared unlaminated": 7,
+      "Premium laminated": 14,
+      "AEG reflective laminated": 17,
+      "AEG reflective unlaminated": 13,
+      "3M 680 reflective laminated": 28,
+      "Tran lam top layer": 16,
+      "Tran lam plus back-up": 28,
+      "Banner with hems and grommets": 7,
+      "Banner no hems or grommets": 5
     },
-    vinylSqftCost: {
-      Calendar: 3,
-      Cast: 4.5,
-      Reflective: 7,
-      Translucent: 8
+    vinylSqftRate: {
+      "Calendared vinyl": 7,
+      "3M 7125 premium": 10,
+      "680 reflective": 40,
+      "Trans vinyl": 14
     },
-    laminateSqftCost: 0.60,
-    appTapeSqftCost: 0.20,
-    inkSqftCost: 0.35,
-    consumableSqftCost: 0.15,
-    digitalItemCharge: 4,
-    vinylItemCharge: 6,
+    digitalItemCharge: 0,
+    vinylItemCharge: 0,
     holesCharge: 3.5,
     cornersCharge: 3.5,
     velcroCharge: 12,
@@ -71,10 +94,10 @@ const PRICING = {
   vehicle: {
     minimumCharge: 250,
     graphicsRates: {
-      printed_calendared: 14,
-      printed_cast: 16,
-      cut_vinyl: 12,
-      reflective: 18,
+      printed_calendared: 10,
+      printed_cast: 14,
+      cut_vinyl: 7,
+      reflective: 40,
       window_perf: 16
     },
     templateSetupFee: 35,
@@ -296,12 +319,17 @@ function autoPriceSign() {
   const perimeterLf = calcTrimLinearFt() * qty;
   const substrate = PRICING.sign.substrates[$("substrate").value] || PRICING.sign.substrates.None;
   const signWasteMultiplier = 1 + PRICING.sign.signWastePercent;
-  const smallJobWaste = totalSqft <= 12 ? PRICING.sign.extraSmallJobWastePercent : 0;
-  const graphicsWasteMultiplier = 1 + PRICING.sign.graphicsWastePercent + smallJobWaste;
   const breakdownRows = [];
 
   let substratePrice = 0;
-  if (substrate.type === "sheet" && substrate.cost > 0) {
+  if (substrate.type === "sqft") {
+    substratePrice = (totalSqft * (substrate.sellSqft || 0)) + (substrate.cutFee || 0);
+    breakdownRows.push({
+      label: `Substrate charge: ${$("substrate").value}`,
+      detail: `This job uses ${totalSqft.toFixed(2)} sq ft at ${money(substrate.sellSqft || 0)}/sq ft from the 6/6/26 sheet${substrate.cutFee ? `, plus a ${money(substrate.cutFee)} cut fee` : ""}.`,
+      amount: substratePrice
+    });
+  } else if (substrate.type === "sheet" && substrate.cost > 0) {
     const usageRatio = totalSqft / PRICING.sign.sheetSqft;
     if (usageRatio < PRICING.sign.sheetPricingThreshold) {
       const sqftCost = substrate.cost / PRICING.sign.sheetSqft;
@@ -331,22 +359,20 @@ function autoPriceSign() {
   let graphicsPrice = 0;
   const graphicsMode = $("graphics_mode").value;
   if (graphicsMode === "DIGITAL") {
-    const baseSqft = PRICING.sign.digitalSqftCost[$("digital_type").value] || 0;
-    const laminateCost = $("laminate_opt").checked ? PRICING.sign.laminateSqftCost : 0;
-    const digitalCost = (baseSqft + laminateCost + PRICING.sign.inkSqftCost + PRICING.sign.consumableSqftCost) * totalSqft * graphicsWasteMultiplier;
-    graphicsPrice = (digitalCost * PRICING.sign.graphicsMarkup) + (num("item_digital") * PRICING.sign.digitalItemCharge);
+    const rate = PRICING.sign.digitalSqftRate[$("digital_type").value] || 0;
+    graphicsPrice = (rate * totalSqft) + (num("item_digital") * PRICING.sign.digitalItemCharge);
     breakdownRows.push({
       label: `Graphics charge: Digital print (${ $("digital_type").value })`,
-      detail: `Digital print materials total ${money(baseSqft + laminateCost + PRICING.sign.inkSqftCost + PRICING.sign.consumableSqftCost)}/sq ft, including media${$("laminate_opt").checked ? ", laminate" : ""}, ink, and consumables. The app applies that to ${totalSqft.toFixed(2)} sq ft, adds ${graphicsWasteMultiplier.toFixed(2)} waste, then uses a ${PRICING.sign.graphicsMarkup.toFixed(2)} graphics markup${num("item_digital") > 0 ? `. It also adds ${num("item_digital")} digital item charge at ${money(PRICING.sign.digitalItemCharge)} each` : ""}.`,
+      detail: `Digital print is billed directly from the 6/6/26 sheet: ${totalSqft.toFixed(2)} sq ft x ${money(rate)}/sq ft${num("item_digital") > 0 && PRICING.sign.digitalItemCharge > 0 ? `. It also adds ${num("item_digital")} digital item charge at ${money(PRICING.sign.digitalItemCharge)} each` : ""}.`,
       amount: graphicsPrice
     });
   }
   if (graphicsMode === "VINYL") {
-    const vinylCost = (PRICING.sign.vinylSqftCost[$("vinyl_type").value] || 0) + PRICING.sign.appTapeSqftCost + PRICING.sign.consumableSqftCost;
-    graphicsPrice = (vinylCost * totalSqft * graphicsWasteMultiplier * PRICING.sign.graphicsMarkup) + (num("item_vinyl") * PRICING.sign.vinylItemCharge);
+    const rate = PRICING.sign.vinylSqftRate[$("vinyl_type").value] || 0;
+    graphicsPrice = (rate * totalSqft) + (num("item_vinyl") * PRICING.sign.vinylItemCharge);
     breakdownRows.push({
       label: `Graphics charge: Cut vinyl (${ $("vinyl_type").value })`,
-      detail: `Vinyl materials total ${money(vinylCost)}/sq ft, including film, application tape, and consumables. The app applies that to ${totalSqft.toFixed(2)} sq ft, adds ${graphicsWasteMultiplier.toFixed(2)} waste, then uses a ${PRICING.sign.graphicsMarkup.toFixed(2)} graphics markup${num("item_vinyl") > 0 ? `. It also adds ${num("item_vinyl")} vinyl item charge at ${money(PRICING.sign.vinylItemCharge)} each` : ""}.`,
+      detail: `Cut vinyl is billed directly from the 6/6/26 sheet: ${totalSqft.toFixed(2)} sq ft x ${money(rate)}/sq ft${num("item_vinyl") > 0 && PRICING.sign.vinylItemCharge > 0 ? `. It also adds ${num("item_vinyl")} vinyl item charge at ${money(PRICING.sign.vinylItemCharge)} each` : ""}.`,
       amount: graphicsPrice
     });
   }
@@ -476,7 +502,7 @@ function syncGraphicsOptions() {
   const digitalOn = graphicsMode === "DIGITAL";
   const vinylOn = graphicsMode === "VINYL";
   $("digital_choice_row").classList.toggle("show", digitalOn);
-  $("laminate_label").classList.toggle("show", digitalOn);
+  $("laminate_label").classList.remove("show");
   $("vinyl_choice_row").classList.toggle("show", vinylOn);
   $("digital_items_field").style.display = digitalOn ? "" : "none";
   $("vinyl_items_field").style.display = vinylOn ? "" : "none";
